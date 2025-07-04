@@ -107,6 +107,12 @@ public class UserInterface
 
     public WorkerDto SelectWorker(string title, List<WorkerDto> choices)
     {
+        if (choices.Count == 0)
+        {
+            Console.WriteLine("\nNo workers exist.");
+            return new WorkerDto();
+        }
+
         var formattedChoices = choices.Select(c => $"{c.FirstName} {c.LastName}, {c.Title}").ToList();
 
         var option = AnsiConsole.Prompt(
@@ -120,6 +126,12 @@ public class UserInterface
 
     public ShiftDto SelectShift(string title, List<ShiftDto> choices)
     {
+        if (choices.Count == 0)
+        {
+            Console.WriteLine("\nNo shifts exist.");
+            return new ShiftDto();
+        }
+
         var sortedChoices = choices
         .OrderByDescending(c => c.Date)      // Primary sort: Date descending
         .ThenByDescending(c => c.StartTime)  // Secondary sort: StartTime descending

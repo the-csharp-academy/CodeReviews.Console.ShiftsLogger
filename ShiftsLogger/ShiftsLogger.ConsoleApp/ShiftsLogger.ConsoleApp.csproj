@@ -14,9 +14,6 @@
 
   <ItemGroup>
 	<ProjectReference Include="..\ShiftsLogger.Api\ShiftsLogger.Api.csproj" />
-<!--
-	<ProjectReference Include="..\ShiftsLogger\ShiftsLogger.csproj" />
--->
   </ItemGroup>
 
 </Project>

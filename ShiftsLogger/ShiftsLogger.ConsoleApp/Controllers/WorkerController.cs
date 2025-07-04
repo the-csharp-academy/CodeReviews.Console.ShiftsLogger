@@ -119,6 +119,10 @@ internal class WorkerController
         AnsiConsole.Write(rule);
         
         var editWorker = userInterface.SelectWorker("\nChoose Worker to Edit:", editWorkers);
+        if (editWorker.FirstName == null)
+        {
+            return;
+        }
 
         try
         {
@@ -182,6 +186,10 @@ internal class WorkerController
         AnsiConsole.Write(rule);
 
         var deleteWorker = userInterface.SelectWorker("\nChoose Worker to Delete:", deleteWorkers);
+        if (deleteWorker.FirstName == null)
+        {
+            return;
+        }
 
         try
         {

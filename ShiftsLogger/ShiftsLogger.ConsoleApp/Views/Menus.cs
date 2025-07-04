@@ -31,7 +31,7 @@ internal class Menus
                 .PageSize(10)
                 .AddChoices(options));
 
-            var menu = new Menus(new ShiftService(new HttpClient()), new WorkerService(new HttpClient { BaseAddress = new Uri("https://localhost:7150/api/") }));
+            var menu = new Menus(new ShiftService(new HttpClient()), new WorkerService(new HttpClient()));
 
             switch (mainMenuChoice)
             {

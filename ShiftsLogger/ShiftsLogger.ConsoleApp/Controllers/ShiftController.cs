@@ -145,6 +145,10 @@ internal class ShiftController
         AnsiConsole.Write(rule);
 
         var editShift = userInterface.SelectShift("\nChoose Shift to Edit:", editShifts);
+        if (editShift.ShiftName == null)
+        {
+            return;
+        }
 
         try
         {
@@ -225,6 +229,10 @@ internal class ShiftController
         AnsiConsole.Write(rule);
 
         var deleteShift = userInterface.SelectShift("\nChoose Shift to Delete:", deleteShifts);
+        if (deleteShift.ShiftName == null)
+        {
+            return;
+        }
 
         try
         {
