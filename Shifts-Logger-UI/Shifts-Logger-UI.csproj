@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>Shifts_Logger_UI</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Spectre.Console" Version="0.50.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="docs\images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Shifts-Logger-API\Shifts-Logger-API.csproj" />
+  </ItemGroup>
+</Project>
