@@ -1,4 +1,4 @@
-﻿using ShiftLoggerAPI.Contracts;
+﻿using ShiftLoggerAPI.Interfaces;
 using ShiftLoggerAPI.Data;
 using ShiftLoggerAPI.Models;
 
@@ -35,6 +35,11 @@ public class EmployeeService : IEmployeeService
     public List<Employee> GetAllEmployees()
     {
         return _dbContext.Employees.ToList();
+    }
+
+    public List<Shift> GetAllEmployeeShifts(int employeeId)
+    {
+        return _dbContext.Shifts.Where(e => e.EmployeeId == employeeId).ToList();
     }
 
     public Employee UpdateEmployee(int id, Employee employee)

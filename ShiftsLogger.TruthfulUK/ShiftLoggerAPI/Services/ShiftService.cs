@@ -1,4 +1,4 @@
-﻿using ShiftLoggerAPI.Contracts;
+﻿using ShiftLoggerAPI.Interfaces;
 using ShiftLoggerAPI.Data;
 using ShiftLoggerAPI.Models;
 

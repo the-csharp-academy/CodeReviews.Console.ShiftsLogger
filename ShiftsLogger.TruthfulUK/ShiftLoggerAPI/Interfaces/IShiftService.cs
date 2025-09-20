@@ -1,6 +1,6 @@
 ﻿using ShiftLoggerAPI.Models;
 
-namespace ShiftLoggerAPI.Contracts;
+namespace ShiftLoggerAPI.Interfaces;
 
 public interface IShiftService
 {
