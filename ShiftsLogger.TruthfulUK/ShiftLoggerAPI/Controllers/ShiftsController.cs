@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShiftLoggerAPI.Interfaces;
-using ShiftLoggerAPI.Entities;
+using ShiftLoggerAPI.Contracts;
 
 namespace ShiftLoggerAPI.Controllers;
 [ApiController]
@@ -15,46 +15,50 @@ public class ShiftsController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<Shift>> GetAllShifts()
+    public ActionResult<List<ShiftResponse>> GetAllShifts()
     {
         var allShifts = _shiftService.GetAllShifts();
 
-        if (allShifts == null)
-        {
-            return NotFound();
-        }
+        if (allShifts == null) return NotFound();
 
         return Ok(allShifts);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Shift> GetShiftById(int id)
+    public ActionResult<ShiftResponse> GetShiftById(int id)
     {
         var shift = _shiftService.GetShiftById(id);
 
-        if (shift == null)
-        {
-            return NotFound();
-        }
+        if (shift == null) return NotFound();
 
         return Ok(shift);
     }
 
     [HttpPost]
-    public ActionResult<Shift> CreateShift(Shift shift)
+    public ActionResult<ShiftResponse> CreateShift(CreateShiftRequest shift)
     {
-        return Ok(_shiftService.CreateShift(shift));
+        var newShift = _shiftService.CreateShift(shift);
+
+        return Ok(newShift);
     }
 
     [HttpPut("{id}")]
-    public ActionResult<Shift> UpdateShift(int id, Shift updatedShift)
+    public ActionResult<ShiftResponse> UpdateShift(int id, UpdateShiftRequest shift)
     {
-        return Ok(_shiftService.UpdateShift(id, updatedShift));
+        var updatedShift = _shiftService.UpdateShift(id, shift);
+
+        if (updatedShift == null) return NotFound();
+
+        return Ok(updatedShift);
     }
 
     [HttpDelete("{id}")]
-    public ActionResult<string> DeleteShift(int id)
+    public ActionResult DeleteShift(int id)
     {
-        return Ok(_shiftService?.DeleteShift(id));
+        var deleted = _shiftService.DeleteShift(id);
+
+        if (!deleted) return NotFound();
+
+        return NoContent();
     }
 }

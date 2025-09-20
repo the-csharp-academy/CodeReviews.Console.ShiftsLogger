@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShiftLoggerAPI.Interfaces;
-using ShiftLoggerAPI.Entities;
 using ShiftLoggerAPI.Contracts;
 
 namespace ShiftLoggerAPI.Controllers;
@@ -28,15 +27,22 @@ public class EmployeesController : ControllerBase
         return Ok(allEmployees);
     }
 
+    [HttpGet("{id:int}")]
+    public ActionResult<EmployeeResponse> GetEmployeeById(int id)
+    {
+        var employee = _employeeService.GetEmployeeById(id);
+
+        if (employee == null) return NotFound();
+
+        return Ok(employee);
+    }
+
     [HttpGet("{id:int}/shifts")]
-    public ActionResult<List<Shift>> GetAllEmployeeShifts(int id)
+    public ActionResult<List<ShiftResponse>> GetAllEmployeeShifts(int id)
     {
         var employeeShifts = _employeeService.GetAllEmployeeShifts(id);
 
-        if (employeeShifts == null)
-        {
-            return NotFound();
-        }
+        if (employeeShifts == null) return NotFound();
 
         return Ok(employeeShifts);
     }
@@ -44,22 +50,28 @@ public class EmployeesController : ControllerBase
     [HttpPost]
     public ActionResult<EmployeeResponse> CreateEmployee(CreateEmployeeRequest employee)
     {
-        var dto = _employeeService.CreateEmployee(employee);
-        return Ok(dto);
+        var newEmployee = _employeeService.CreateEmployee(employee);
+
+        return Ok(newEmployee);
     }
 
     [HttpPut("{id:int}")]
     public ActionResult<EmployeeResponse> UpdateEmployee(int id, UpdateEmployeeRequest updatedEmployee)
     {
-        var dto = _employeeService.UpdateEmployee(id, updatedEmployee);
-        return Ok(dto);
+        var targetEmployee = _employeeService.UpdateEmployee(id, updatedEmployee);
+
+        if (targetEmployee == null) return NotFound();
+
+        return Ok(targetEmployee);
     }
 
     [HttpDelete("{id:int}")]
     public ActionResult DeleteEmployee(int id)
     {
         var deleted = _employeeService.DeleteEmployee(id);
+
         if (!deleted) return NotFound();
+
         return NoContent();
     }
 }

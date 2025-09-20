@@ -1,6 +1,9 @@
 ﻿using ShiftLoggerAPI.Interfaces;
 using ShiftLoggerAPI.Data;
 using ShiftLoggerAPI.Entities;
+using ShiftLoggerAPI.Contracts;
+using ShiftLoggerAPI.Mapping;
+using Microsoft.EntityFrameworkCore;
 
 namespace ShiftLoggerAPI.Services;
 
@@ -13,45 +16,53 @@ public class ShiftService : IShiftService
         _dbContext = dbContext;
     }
 
-    public Shift CreateShift(Shift shift)
+    public ShiftResponse CreateShift(CreateShiftRequest shift)
     {
-        var savedShift = _dbContext.Shifts.Add(shift);
+        var newShift = new Shift(shift.Start, shift.End, shift.EmployeeId);
+        _dbContext.Shifts.Add(newShift);
         _dbContext.SaveChanges();
-        return savedShift.Entity;
+        return newShift.ToResponse();
     }
 
-    public string? DeleteShift(int id)
+    public bool DeleteShift(int id)
     {
-        Shift savedShift = _dbContext.Shifts.Find(id);
+        var shift = _dbContext.Shifts.Find(id);
 
-        if (savedShift == null) return null;
+        if (shift == null) return false;
 
-        _dbContext.Shifts.Remove(savedShift);
-        _dbContext.SaveChanges();
-
-        return $"Successfully deleted shift with the ID of ${id}";
-    }
-
-    public List<Shift> GetAllShifts()
-    {
-        return _dbContext.Shifts.ToList();
-    }
-
-    public Shift? GetShiftById(int id)
-    {
-        Shift savedShift = _dbContext.Shifts.Find(id);
-        return savedShift;
-    }
-
-    public Shift UpdateShift(int id, Shift shift)
-    {
-        Shift savedShift = _dbContext.Shifts.Find(id);
-
-        if (savedShift == null) return null;
-
-        _dbContext.Entry(savedShift).CurrentValues.SetValues(shift);
+        _dbContext.Shifts.Remove(shift);
         _dbContext.SaveChanges();
 
-        return savedShift;
+        return true;
+    }
+
+    public List<ShiftResponse> GetAllShifts()
+    {
+        return _dbContext.Shifts
+            .AsNoTracking()
+            .Select(s => s.ToResponse())
+            .ToList();
+    }
+
+    public ShiftResponse? GetShiftById(int id)
+    {
+        var shift = _dbContext.Shifts.Find(id);
+
+        if (shift == null) return null;
+
+        return shift.ToResponse();
+    }
+
+    public ShiftResponse? UpdateShift(int id, UpdateShiftRequest shift)
+    {
+        var targetShift = _dbContext.Shifts.FirstOrDefault(x => x.Id == id);
+
+        if (targetShift == null) return null;
+
+        targetShift.Update(shift.Start, shift.End, shift.EmployeeId);
+        
+        _dbContext.SaveChanges();
+
+        return targetShift.ToResponse();
     }
 }

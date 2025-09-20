@@ -44,12 +44,25 @@ public class EmployeeService : IEmployeeService
             .ToList();
     }
 
-    public List<Shift> GetAllEmployeeShifts(int employeeId)
+    public EmployeeResponse GetEmployeeById(int id)
     {
-        return _dbContext.Shifts.Where(e => e.EmployeeId == employeeId).ToList();
+        var employee = _dbContext.Employees
+            .AsNoTracking()
+            .SingleOrDefault(e => e.Id == id);
+        if (employee == null) return null;
+        
+        return employee.ToResponse();
     }
 
-    public EmployeeResponse UpdateEmployee(int id, UpdateEmployeeRequest employee)
+    public List<ShiftResponse> GetAllEmployeeShifts(int employeeId)
+    {
+        return _dbContext.Shifts.Where(e => e.EmployeeId == employeeId)
+            .AsNoTracking()
+            .Select(s => s.ToResponse())
+            .ToList();
+    }
+
+    public EmployeeResponse? UpdateEmployee(int id, UpdateEmployeeRequest employee)
     {
         var targetEmployee = _dbContext.Employees.FirstOrDefault(x => x.Id == id);
         
@@ -58,6 +71,7 @@ public class EmployeeService : IEmployeeService
         targetEmployee.Update(employee.Name, employee.Title);
 
         _dbContext.SaveChanges();
+
         return targetEmployee.ToResponse();
     }
 }
