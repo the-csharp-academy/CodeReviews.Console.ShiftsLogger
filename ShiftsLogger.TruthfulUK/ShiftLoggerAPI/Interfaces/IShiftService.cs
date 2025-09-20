@@ -1,4 +1,4 @@
-﻿using ShiftLoggerAPI.Models;
+﻿using ShiftLoggerAPI.Entities;
 
 namespace ShiftLoggerAPI.Interfaces;
 

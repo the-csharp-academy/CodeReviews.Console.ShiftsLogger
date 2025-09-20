@@ -1,4 +1,4 @@
-﻿namespace ShiftLoggerAPI.Models;
+﻿namespace ShiftLoggerAPI.Entities;
 
 public class Shift
 {

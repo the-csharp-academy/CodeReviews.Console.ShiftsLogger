@@ -1,6 +1,6 @@
 ﻿using ShiftLoggerAPI.Interfaces;
 using ShiftLoggerAPI.Data;
-using ShiftLoggerAPI.Models;
+using ShiftLoggerAPI.Entities;
 
 namespace ShiftLoggerAPI.Services;
 

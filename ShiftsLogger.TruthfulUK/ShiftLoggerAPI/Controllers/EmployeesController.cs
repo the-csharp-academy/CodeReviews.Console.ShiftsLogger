@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShiftLoggerAPI.Interfaces;
-using ShiftLoggerAPI.Models;
+using ShiftLoggerAPI.Entities;
+using ShiftLoggerAPI.Contracts;
 
 namespace ShiftLoggerAPI.Controllers;
 [ApiController]
@@ -15,32 +16,50 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<Employee>> GetAllEmployees()
+    public ActionResult<List<EmployeeResponse>> GetAllEmployees()
     {
-        return Ok(_employeeService.GetAllEmployees());
+        var allEmployees = _employeeService.GetAllEmployees();
+
+        if (allEmployees == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(allEmployees);
     }
 
-    [HttpGet("{EmployeeId}/shifts")]
-    public ActionResult<List<Shift>> GetAllEmployeeShifts(int EmployeeId)
+    [HttpGet("{id:int}/shifts")]
+    public ActionResult<List<Shift>> GetAllEmployeeShifts(int id)
     {
-        return Ok(_employeeService.GetAllEmployeeShifts(EmployeeId));
+        var employeeShifts = _employeeService.GetAllEmployeeShifts(id);
+
+        if (employeeShifts == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(employeeShifts);
     }
 
     [HttpPost]
-    public ActionResult<Employee> CreateEmployee(Employee employee)
+    public ActionResult<EmployeeResponse> CreateEmployee(CreateEmployeeRequest employee)
     {
-        return Ok(_employeeService.CreateEmployee(employee));
+        var dto = _employeeService.CreateEmployee(employee);
+        return Ok(dto);
     }
 
-    [HttpPut]
-    public ActionResult<Employee> UpdateEmployee(int id, Employee updatedEmployee)
+    [HttpPut("{id:int}")]
+    public ActionResult<EmployeeResponse> UpdateEmployee(int id, UpdateEmployeeRequest updatedEmployee)
     {
-        return Ok(_employeeService.UpdateEmployee(id, updatedEmployee));
+        var dto = _employeeService.UpdateEmployee(id, updatedEmployee);
+        return Ok(dto);
     }
 
-    [HttpDelete]
-    public ActionResult<string> DeleteEmployee(int id)
+    [HttpDelete("{id:int}")]
+    public ActionResult DeleteEmployee(int id)
     {
-        return Ok(_employeeService.DeleteEmployee(id));
+        var deleted = _employeeService.DeleteEmployee(id);
+        if (!deleted) return NotFound();
+        return NoContent();
     }
 }

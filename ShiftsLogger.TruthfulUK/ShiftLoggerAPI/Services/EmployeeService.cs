@@ -1,6 +1,9 @@
 ﻿using ShiftLoggerAPI.Interfaces;
 using ShiftLoggerAPI.Data;
-using ShiftLoggerAPI.Models;
+using ShiftLoggerAPI.Entities;
+using ShiftLoggerAPI.Contracts;
+using Microsoft.EntityFrameworkCore;
+using ShiftLoggerAPI.Mapping;
 
 namespace ShiftLoggerAPI.Services;
 
@@ -13,28 +16,32 @@ public class EmployeeService : IEmployeeService
         _dbContext = dbContext;
     }
 
-    public Employee CreateEmployee(Employee employee)
+    public EmployeeResponse CreateEmployee(CreateEmployeeRequest employee)
     {
-        var savedEmployee = _dbContext.Employees.Add(employee);
+        var newEmployee = new Employee(employee.Name, employee.Title);
+        _dbContext.Employees.Add(newEmployee);
         _dbContext.SaveChanges();
-        return savedEmployee.Entity;
+        return newEmployee.ToResponse();
     }
 
-    public string? DeleteEmployee(int id)
+    public bool DeleteEmployee(int id)
     {
-        Employee savedEmployee = _dbContext.Employees.Find(id);
+        var employee = _dbContext.Employees.Find(id);
 
-        if (savedEmployee == null) return null;
+        if (employee == null) return false;
 
-        _dbContext.Employees.Remove(savedEmployee);
+        _dbContext.Employees.Remove(employee);
         _dbContext.SaveChanges();
 
-        return $"Successfully deleted the employee with ID of {id}";
+        return true;
     }
 
-    public List<Employee> GetAllEmployees()
+    public List<EmployeeResponse> GetAllEmployees()
     {
-        return _dbContext.Employees.ToList();
+        return _dbContext.Employees
+            .AsNoTracking()
+            .Select (e => e.ToResponse())
+            .ToList();
     }
 
     public List<Shift> GetAllEmployeeShifts(int employeeId)
@@ -42,15 +49,15 @@ public class EmployeeService : IEmployeeService
         return _dbContext.Shifts.Where(e => e.EmployeeId == employeeId).ToList();
     }
 
-    public Employee UpdateEmployee(int id, Employee employee)
+    public EmployeeResponse UpdateEmployee(int id, UpdateEmployeeRequest employee)
     {
-        Employee savedEmployee = _dbContext.Employees.Find(id);
+        var targetEmployee = _dbContext.Employees.FirstOrDefault(x => x.Id == id);
+        
+        if (targetEmployee == null) return null;
 
-        if (savedEmployee == null) return null;
+        targetEmployee.Update(employee.Name, employee.Title);
 
-        _dbContext.Entry(savedEmployee).CurrentValues.SetValues(employee);
         _dbContext.SaveChanges();
-
-        return savedEmployee;
+        return targetEmployee.ToResponse();
     }
 }

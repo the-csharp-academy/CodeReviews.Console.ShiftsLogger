@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShiftLoggerAPI.Interfaces;
-using ShiftLoggerAPI.Models;
+using ShiftLoggerAPI.Entities;
 
 namespace ShiftLoggerAPI.Controllers;
 [ApiController]
@@ -17,13 +17,27 @@ public class ShiftsController : ControllerBase
     [HttpGet]
     public ActionResult<List<Shift>> GetAllShifts()
     {
-        return Ok(_shiftService.GetAllShifts());
+        var allShifts = _shiftService.GetAllShifts();
+
+        if (allShifts == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(allShifts);
     }
 
     [HttpGet("{id}")]
     public ActionResult<Shift> GetShiftById(int id)
     {
-        return Ok(_shiftService.GetShiftById(id));
+        var shift = _shiftService.GetShiftById(id);
+
+        if (shift == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(shift);
     }
 
     [HttpPost]

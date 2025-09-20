@@ -1,12 +1,13 @@
-﻿using ShiftLoggerAPI.Models;
+﻿using ShiftLoggerAPI.Contracts;
+using ShiftLoggerAPI.Entities;
 
 namespace ShiftLoggerAPI.Interfaces;
 
 public interface IEmployeeService
 {
-    public List<Employee> GetAllEmployees();
+    public List<EmployeeResponse> GetAllEmployees();
     public List<Shift> GetAllEmployeeShifts(int id);
-    public Employee CreateEmployee(Employee employee);
-    public Employee UpdateEmployee(int id, Employee employee);
-    public string? DeleteEmployee(int id);
+    public EmployeeResponse CreateEmployee(CreateEmployeeRequest employee);
+    public EmployeeResponse UpdateEmployee(int id, UpdateEmployeeRequest employee);
+    public bool DeleteEmployee(int id);
 }
