@@ -61,16 +61,23 @@ public class ShiftService : IShiftService
         return shift.ToResponse();
     }
 
-    public ShiftResponse? UpdateShift(int id, UpdateShiftRequest shift)
+    public ShiftResponse? UpdateShift(int id, UpdateShiftRequest updatedShift)
     {
-        var targetShift = _dbContext.Shifts.FirstOrDefault(x => x.Id == id);
 
-        if (targetShift == null) return null;
+        var employeeExists = _dbContext.Employees
+            .AsNoTracking()
+            .Any(e => e.Id == updatedShift.EmployeeId);
 
-        targetShift.Update(shift.Start, shift.End, shift.EmployeeId);
+        if (!employeeExists) return null;
+
+        var currentShift = _dbContext.Shifts.Find(id);
+
+        if (currentShift == null) return null;
+
+        currentShift.Update(updatedShift.Start, updatedShift.End, updatedShift.EmployeeId);
         
         _dbContext.SaveChanges();
 
-        return targetShift.ToResponse();
+        return currentShift.ToResponse();
     }
 }

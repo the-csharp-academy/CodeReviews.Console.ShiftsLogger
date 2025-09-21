@@ -58,8 +58,14 @@ public class EmployeeService : IEmployeeService
         return employee.ToResponse();
     }
 
-    public List<ShiftResponse> GetAllEmployeeShifts(int employeeId)
+    public List<ShiftResponse>? GetAllEmployeeShifts(int employeeId)
     {
+        var employeeExists = _dbContext.Employees
+            .AsNoTracking()
+            .Any(e => e.Id == employeeId);
+
+        if (!employeeExists) return null;
+
         return _dbContext.Shifts.Where(e => e.EmployeeId == employeeId)
             .AsNoTracking()
             .Select(s => s.ToResponse())

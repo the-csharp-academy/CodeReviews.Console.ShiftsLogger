@@ -45,8 +45,8 @@ public class ShiftsController : ControllerBase
                 new { id = newShift.Id }, newShift)
             : Problem(
                 statusCode: StatusCodes.Status422UnprocessableEntity,
-                title: "Invalid EmployeeId",
-                detail: $"Employee #{shift.EmployeeId} does not exist.");
+                title: "Invalid Employee ID",
+                detail: $"There is no employee with the ID {shift.EmployeeId}.");
     }
 
     [HttpPut("{id}")]
@@ -54,9 +54,14 @@ public class ShiftsController : ControllerBase
     {
         var updatedShift = _shiftService.UpdateShift(id, shift);
 
-        if (updatedShift == null) return NotFound();
-
-        return Ok(updatedShift);
+        return (updatedShift != null)
+            ? CreatedAtAction(
+                nameof(GetShiftById),
+                new { id = updatedShift.Id }, updatedShift)
+            : Problem(
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                title: "Invalid Employee ID or Shift ID",
+                detail: $"The updated shift contains an invalid Employee ID or Shift ID.");
     }
 
     [HttpDelete("{id}")]
