@@ -1,7 +1,7 @@
 ﻿using ShiftLoggerAPI.Interfaces;
 using ShiftLoggerAPI.Data;
 using ShiftLoggerAPI.Entities;
-using ShiftLoggerAPI.Contracts;
+using ShiftLoggerAPI.Contracts.Shifts;
 using ShiftLoggerAPI.Mapping;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,11 +16,19 @@ public class ShiftService : IShiftService
         _dbContext = dbContext;
     }
 
-    public ShiftResponse CreateShift(CreateShiftRequest shift)
+    public ShiftResponse? CreateShift(CreateShiftRequest shift)
     {
+        var employeeExists = _dbContext.Employees
+            .AsNoTracking()
+            .Any(e => e.Id == shift.EmployeeId);
+
+        if (!employeeExists) return null;
+
         var newShift = new Shift(shift.Start, shift.End, shift.EmployeeId);
+
         _dbContext.Shifts.Add(newShift);
         _dbContext.SaveChanges();
+
         return newShift.ToResponse();
     }
 

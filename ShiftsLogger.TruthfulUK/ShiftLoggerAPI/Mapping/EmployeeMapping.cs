@@ -1,4 +1,4 @@
-﻿using ShiftLoggerAPI.Contracts;
+﻿using ShiftLoggerAPI.Contracts.Employees;
 using ShiftLoggerAPI.Entities;
 
 namespace ShiftLoggerAPI.Mapping;

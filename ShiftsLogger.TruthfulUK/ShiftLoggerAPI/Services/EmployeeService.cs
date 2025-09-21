@@ -1,7 +1,8 @@
 ﻿using ShiftLoggerAPI.Interfaces;
 using ShiftLoggerAPI.Data;
 using ShiftLoggerAPI.Entities;
-using ShiftLoggerAPI.Contracts;
+using ShiftLoggerAPI.Contracts.Employees;
+using ShiftLoggerAPI.Contracts.Shifts;
 using Microsoft.EntityFrameworkCore;
 using ShiftLoggerAPI.Mapping;
 
@@ -19,8 +20,10 @@ public class EmployeeService : IEmployeeService
     public EmployeeResponse CreateEmployee(CreateEmployeeRequest employee)
     {
         var newEmployee = new Employee(employee.Name, employee.Title);
+
         _dbContext.Employees.Add(newEmployee);
         _dbContext.SaveChanges();
+
         return newEmployee.ToResponse();
     }
 
@@ -44,11 +47,12 @@ public class EmployeeService : IEmployeeService
             .ToList();
     }
 
-    public EmployeeResponse GetEmployeeById(int id)
+    public EmployeeResponse? GetEmployeeById(int id)
     {
         var employee = _dbContext.Employees
             .AsNoTracking()
             .SingleOrDefault(e => e.Id == id);
+
         if (employee == null) return null;
         
         return employee.ToResponse();

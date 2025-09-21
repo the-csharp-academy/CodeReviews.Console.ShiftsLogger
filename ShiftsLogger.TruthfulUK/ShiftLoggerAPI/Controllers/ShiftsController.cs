@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShiftLoggerAPI.Interfaces;
-using ShiftLoggerAPI.Contracts;
+using ShiftLoggerAPI.Contracts.Shifts;
 
 namespace ShiftLoggerAPI.Controllers;
 [ApiController]
@@ -39,7 +39,14 @@ public class ShiftsController : ControllerBase
     {
         var newShift = _shiftService.CreateShift(shift);
 
-        return Ok(newShift);
+        return (newShift != null)
+            ? CreatedAtAction(
+                nameof(GetShiftById),
+                new { id = newShift.Id }, newShift)
+            : Problem(
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                title: "Invalid EmployeeId",
+                detail: $"Employee #{shift.EmployeeId} does not exist.");
     }
 
     [HttpPut("{id}")]

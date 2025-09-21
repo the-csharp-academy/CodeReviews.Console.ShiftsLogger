@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShiftLoggerAPI.Interfaces;
-using ShiftLoggerAPI.Contracts;
+using ShiftLoggerAPI.Contracts.Employees;
+using ShiftLoggerAPI.Contracts.Shifts;
 
 namespace ShiftLoggerAPI.Controllers;
 [ApiController]
@@ -19,10 +20,7 @@ public class EmployeesController : ControllerBase
     {
         var allEmployees = _employeeService.GetAllEmployees();
 
-        if (allEmployees == null)
-        {
-            return NotFound();
-        }
+        if (allEmployees == null) return NotFound();
 
         return Ok(allEmployees);
     }
