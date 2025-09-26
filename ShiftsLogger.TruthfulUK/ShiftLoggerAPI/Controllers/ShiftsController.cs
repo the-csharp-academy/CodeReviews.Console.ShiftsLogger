@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ShiftLoggerAPI.Interfaces;
 using ShiftLoggerAPI.Contracts.Shifts;
+using ShiftLoggerAPI.Interfaces;
 
 namespace ShiftLoggerAPI.Controllers;
 [ApiController]
@@ -19,9 +19,12 @@ public class ShiftsController : ControllerBase
     {
         var allShifts = _shiftService.GetAllShifts();
 
-        if (allShifts == null) return NotFound();
-
-        return Ok(allShifts);
+        return (allShifts != null)
+            ? Ok(allShifts)
+            : Problem(
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                title: "No Employees",
+                detail: "There is currently no employees in the database.");
     }
 
     [HttpGet("{id}")]
@@ -29,9 +32,12 @@ public class ShiftsController : ControllerBase
     {
         var shift = _shiftService.GetShiftById(id);
 
-        if (shift == null) return NotFound();
-
-        return Ok(shift);
+        return (shift != null)
+            ? Ok(shift)
+            : Problem(
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                title: "Invalid Shift ID",
+                detail: $"There is no shift with the ID {id}.");
     }
 
     [HttpPost]
@@ -67,10 +73,13 @@ public class ShiftsController : ControllerBase
     [HttpDelete("{id}")]
     public ActionResult DeleteShift(int id)
     {
-        var deleted = _shiftService.DeleteShift(id);
+        var isDeleted = _shiftService.DeleteShift(id);
 
-        if (!deleted) return NotFound();
-
-        return NoContent();
+        return (isDeleted)
+            ? Ok()
+            : Problem(
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                title: "Invalid Shift ID",
+                detail: $"There is no shift with the ID {id}.");
     }
 }

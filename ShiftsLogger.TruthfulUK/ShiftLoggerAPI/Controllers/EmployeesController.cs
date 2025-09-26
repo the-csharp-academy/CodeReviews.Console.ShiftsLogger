@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShiftLoggerAPI.Contracts.Employees;
 using ShiftLoggerAPI.Contracts.Shifts;
-using ShiftLoggerAPI.Entities;
 using ShiftLoggerAPI.Interfaces;
 
 namespace ShiftLoggerAPI.Controllers;
@@ -21,9 +20,12 @@ public class EmployeesController : ControllerBase
     {
         var allEmployees = _employeeService.GetAllEmployees();
 
-        if (allEmployees == null) return NotFound();
-
-        return Ok(allEmployees);
+        return (allEmployees != null)
+            ? Ok(allEmployees)
+            : Problem(
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                title: "No Employees",
+                detail: "There is currently no employees in the database.");
     }
 
     [HttpGet("{id:int}")]
@@ -31,9 +33,12 @@ public class EmployeesController : ControllerBase
     {
         var employee = _employeeService.GetEmployeeById(id);
 
-        if (employee == null) return NotFound();
-
-        return Ok(employee);
+        return (employee != null)
+            ? Ok(employee)
+            : Problem(
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                title: "Invalid Employee ID",
+                detail: $"There is no employee with the ID {id}.");
     }
 
     [HttpGet("{id:int}/shifts")]
@@ -54,26 +59,41 @@ public class EmployeesController : ControllerBase
     {
         var newEmployee = _employeeService.CreateEmployee(employee);
 
-        return Ok(newEmployee);
+        return (newEmployee != null)
+            ? CreatedAtAction(
+                nameof(GetEmployeeById),
+                new { id = newEmployee.Id }, newEmployee)
+            : Problem(
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                title: "Error.",
+                detail: "Unknown error processing employee creation.");
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult<EmployeeResponse> UpdateEmployee(int id, UpdateEmployeeRequest updatedEmployee)
+    public ActionResult<EmployeeResponse> UpdateEmployee(int id, UpdateEmployeeRequest updatedEmployeeDetails)
     {
-        var targetEmployee = _employeeService.UpdateEmployee(id, updatedEmployee);
+        var updatedEmployee = _employeeService.UpdateEmployee(id, updatedEmployeeDetails);
 
-        if (targetEmployee == null) return NotFound();
-
-        return Ok(targetEmployee);
+        return (updatedEmployee != null)
+            ? CreatedAtAction(
+                nameof(GetEmployeeById),
+                new { id = updatedEmployee.Id }, updatedEmployee)
+            : Problem(
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                title: "Invalid Employee ID",
+                detail: $"There is no employee with the ID {id}.");
     }
 
     [HttpDelete("{id:int}")]
     public ActionResult DeleteEmployee(int id)
     {
-        var deleted = _employeeService.DeleteEmployee(id);
+        var isDeleted = _employeeService.DeleteEmployee(id);
 
-        if (!deleted) return NotFound();
-
-        return NoContent();
+        return (isDeleted) 
+            ? Ok()
+            : Problem(
+                statusCode: StatusCodes.Status422UnprocessableEntity,
+                title: "Invalid Employee ID",
+                detail: $"There is no employee with the ID {id}.");
     }
 }
