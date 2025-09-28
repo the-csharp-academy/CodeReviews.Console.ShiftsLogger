@@ -44,6 +44,8 @@ internal class ShiftHandler
             return;
         }
 
+        Helpers.Header($"Logging Shift: {shiftDuration}");
+
         var employee = AnsiConsole.Prompt(
             new SelectionPrompt<EmployeeResponse>()
             .Title("Please select an [chartreuse1]employee[/]:")
