@@ -22,7 +22,7 @@ namespace ShiftLoggerAPI.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ShiftLoggerAPI.Models.Employee", b =>
+            modelBuilder.Entity("ShiftLoggerAPI.Entities.Employee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,7 +43,7 @@ namespace ShiftLoggerAPI.Data.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("ShiftLoggerAPI.Models.Shift", b =>
+            modelBuilder.Entity("ShiftLoggerAPI.Entities.Shift", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,23 +62,7 @@ namespace ShiftLoggerAPI.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId");
-
                     b.ToTable("Shifts");
-                });
-
-            modelBuilder.Entity("ShiftLoggerAPI.Models.Shift", b =>
-                {
-                    b.HasOne("ShiftLoggerAPI.Models.Employee", null)
-                        .WithMany("Shifts")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ShiftLoggerAPI.Models.Employee", b =>
-                {
-                    b.Navigation("Shifts");
                 });
 #pragma warning restore 612, 618
         }
