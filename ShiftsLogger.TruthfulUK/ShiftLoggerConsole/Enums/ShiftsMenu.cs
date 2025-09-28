@@ -6,8 +6,8 @@ internal enum ShiftsMenu
     [Display(Name = "Log a Shift")]
     LogShift,
 
-    [Display(Name = "View Recent Shifts")]
-    ViewRecent,
+    [Display(Name = "View All Shifts")]
+    ViewShifts,
 
     [Display(Name = "View Shifts by Employee")]
     ViewEmployeeShifts,

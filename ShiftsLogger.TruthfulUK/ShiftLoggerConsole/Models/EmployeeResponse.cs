@@ -5,5 +5,10 @@ internal class EmployeeResponse
     public string Name { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
 
-    public override string ToString() => Name;
+    public override string ToString() => $"{Name} - {Title}";
+
+    public string Display()
+    {
+        return $"ID: {Id} | Name: {Name} | Title: {Title}";
+    }
 }

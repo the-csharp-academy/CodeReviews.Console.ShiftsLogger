@@ -4,16 +4,16 @@ namespace ShiftLoggerConsole.Enums;
 internal enum EmployeesMenu
 {
     [Display(Name = "View Employees")]
-    LogShift,
+    ViewEmployees,
 
     [Display(Name = "Add an Employee")]
-    ViewRecent,
+    AddEmployee,
 
     [Display(Name = "Update an Employee")]
-    ViewEmployeeShifts,
+    UpdateEmployee,
 
     [Display(Name = "Delete an Employee")]
-    UpdateShift,
+    DeleteEmployee,
 
     [Display(Name = "Back to Main Menu")]
     BackToMainMenu

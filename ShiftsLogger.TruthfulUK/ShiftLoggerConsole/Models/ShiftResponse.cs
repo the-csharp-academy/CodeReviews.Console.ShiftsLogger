@@ -1,4 +1,6 @@
-﻿namespace ShiftLoggerConsole.Models;
+﻿using System.Xml.Linq;
+
+namespace ShiftLoggerConsole.Models;
 internal class ShiftResponse
 {
     public int Id { get; set; }
@@ -6,4 +8,9 @@ internal class ShiftResponse
     public DateTime End { get; set; }
     public TimeSpan Duration { get; set; }
     public int EmployeeId { get; set; }
+
+    public override string ToString()
+    {
+        return $"Start: {Start} | End: {End} | Duration: {Duration} | Employee ID: {EmployeeId}";
+    }
 }

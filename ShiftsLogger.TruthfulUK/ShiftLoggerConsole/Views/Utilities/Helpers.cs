@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Reflection;
 
-namespace ShiftLoggerConsole.Views.Helpers;
-internal static class InputHelper
+namespace ShiftLoggerConsole.Views.Utilities;
+internal static class Helpers
 {
     public static Dictionary<string, TEnum> GetMenuOptions<TEnum>()
         where TEnum : struct, Enum
@@ -34,6 +34,31 @@ internal static class InputHelper
 
         return options[selectedKey];
     }
+
+    public static bool ConfirmationPrompt(string text, bool defaultValue)
+    {
+        var confirmaiton = AnsiConsole.Prompt(
+            new TextPrompt<bool>(text)
+            .AddChoice(true)
+            .AddChoice(false)
+            .DefaultValue(defaultValue)
+            .WithConverter(choice => choice ? "Y" : "N"));
+
+        return confirmaiton;
+    }
+
+    public static string PromptNonEmpty(string message)
+    {
+        var input = AnsiConsole.Prompt(
+        new TextPrompt<string>(message)
+            .Validate(s =>
+                string.IsNullOrWhiteSpace(s)
+                    ? Spectre.Console.ValidationResult.Error("\n[red]Invalid text, your input cannot be empty or only spaces.[/]\n")
+                    : Spectre.Console.ValidationResult.Success()));
+
+        return input;
+    }
+    
 
     public static DateOnly DatePrompt()
     {
