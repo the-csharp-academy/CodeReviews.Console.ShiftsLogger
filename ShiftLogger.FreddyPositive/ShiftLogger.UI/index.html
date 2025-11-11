@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shift-Logger</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+  </script>
+
+  <!-- jQuery CDN -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <!-- SweetAlert2 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script type="module" src="js/shiftlogger.js"></script>
+  <link rel="stylesheet" href="css/shiftlogger.css" />
+</head>
+
+<body>
+  <div class="content">
+    <nav>
+      <div class="sl-sidebar">
+        <p class="sl-sidebar-head">Shift Logger</p>
+        <a class="sl-slidebar-btn" id="sl-shift-tracker" href="index.html">Shift Tracker</a>
+      </div>
+    </nav>
+    <div class="sl-main-content">
+      <div class="sl-main-heading">
+        <h1>Shift Logger</h1>
+      </div>
+      <div class="sl-shift-marker">
+        <div class="dropdown" id="EmployeeListDdl">
+          <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton1"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Choose a Employee
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          </ul>
+        </div>
+
+        <button class="btn btn-success button" id="sl-shift-in">
+          <div class="button-outer">
+            <div class="button-inner">
+              <span>Shift In</span>
+            </div>
+          </div>
+        </button>
+
+        <button class="btn btn-success button" id="sl-shift-out" disabled>   <div class="button-outer">
+            <div class="button-inner">
+              <span>Shift Out</span>
+            </div>
+          </div>
+        </button></button>
+
+      </div>
+
+
+      <div class="sl-shiftlog-table">
+        <p class="sl-table-heading">Shift Log</p>
+        <table class="table table-sm" style="width: 78%">
+          <thead>
+            <tr class="table-success">
+              <th scope="col">Si.No</th>
+              <th scope="col">Employee Name</th>
+              <th scope="col">Shift Status</th>
+              <th scope="col">Shift Duration (min/hrs)</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
