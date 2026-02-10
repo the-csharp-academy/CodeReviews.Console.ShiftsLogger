@@ -10,7 +10,7 @@ public interface IWorkerService
 {
     Task<WorkerDto?> AddWorkerAsync(WorkerCreationDto workerCreationDtoDto);
     Task<WorkerDto?> GetWorkerByIdAsync(int id);
-    Task<WorkerDto?> UpdateWorkerAsync(int id, string workerName);
+    Task<WorkerDto?> UpdateWorkerAsync(int id, WorkerCreationDto updatedWorkerDto);
     Task<bool> DeleteWorkerAsync(int id);
     Task<List<WorkerDto>?> GetAllWorkersAsync();
     Task<WorkerWithShiftsDto?> GetWorkerWithShiftsAsync(int id);
@@ -102,14 +102,14 @@ public class WorkerService : IWorkerService
         return workerDto;
     }
 
-    public async Task<WorkerDto?> UpdateWorkerAsync(int id, string workerName)
+    public async Task<WorkerDto?> UpdateWorkerAsync(int id, WorkerCreationDto updatedWorkerDto)
     {
         var worker = await _context.Workers.FindAsync(id);
         if (worker is null)
         {
             return null;
         }
-        worker.Name = workerName;
+        worker.Name = updatedWorkerDto.Name;
         await _context.SaveChangesAsync();
         WorkerDto updatedWorker = new()
         {

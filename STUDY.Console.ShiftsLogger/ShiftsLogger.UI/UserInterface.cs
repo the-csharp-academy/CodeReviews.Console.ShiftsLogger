@@ -1,4 +1,5 @@
 using ShiftsLogger.UI.Controller;
+using ShiftsLogger.UI.DTOs;
 using ShiftsLogger.UI.Services;
 using Spectre.Console;
 
@@ -28,7 +29,9 @@ public class UserInterface
             switch (choice)
             {
                 case "View All Workers":
-                    await _workerController.GetAllWorkers();
+                    var worker = await _workerController.GetAllWorkers();
+                    if (worker is not null)
+                        await ManageWorker(worker);
                     break;
                 case "Add a New Worker":
                     await _workerController.AddWorker();
@@ -47,54 +50,48 @@ public class UserInterface
         }
     }
 
-    // private void ManageWorkers()
-    // {
-    //     bool inWorkerMenu = true;
-    //     while (inWorkerMenu)
-    //     {
-    //         AnsiConsole.Clear();
-    //         var choice = AnsiConsole.Prompt(
-    //             new SelectionPrompt<string>()
-    //                 .Title("[green]Worker Management[/]")
-    //                 .AddChoices(new[] {
-    //                     "View All Workers",
-    //                     "Add Worker",
-    //                     "Update Worker",
-    //                     "Delete Worker",
-    //                     "Get Worker Details",
-    //                     "Back to Main Menu"
-    //                 }));
-    //
-    //         switch (choice)
-    //         {
-    //             case "View All Workers":
-    //                 _workerService.GetAllWorkers();
-    //                 break;
-    //             case "Add Worker":
-    //                 _workerService.AddWorker();
-    //                 break;
-    //             case "Update Worker":
-    //                 _workerService.UpdateWorker();
-    //                 break;
-    //             case "Delete Worker":
-    //                 _workerService.DeleteWorker();
-    //                 break;
-    //             case "Get Worker Details":
-    //                 _workerService.GetWorkerDetails();
-    //                 break;
-    //             case "Back to Main Menu":
-    //                 inWorkerMenu = false;
-    //                 break;
-    //         }
-    //
-    //         if (choice != "Back to Main Menu")
-    //         {
-    //             AnsiConsole.MarkupLine("\nPress any key to continue...");
-    //             Console.ReadKey(true);
-    //         }
-    //     }
-    // }
-    //
+    private async Task ManageWorker(WorkerDto worker)
+    {
+        bool inWorkerMenu = true;
+        while (inWorkerMenu)
+        {
+            AnsiConsole.Clear();
+            var choice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title($"Worker Management for: [cyan]{worker.Name}[/]")
+                    .AddChoices(new[] {
+                        "Update Worker Data",
+                        "Delete Worker",
+                        "Manage Worker Shifts",
+                        "Back to Main Menu"
+                    }));
+    
+            switch (choice)
+            {
+                case "Update Worker Data":
+                    var newName = await _workerController.UpdateWorker(worker);
+                    if (newName is not null)
+                        worker.Name = newName;
+                    break;
+                case "Delete Worker":
+                    inWorkerMenu = !await _workerController.DeleteWorker(worker);
+                    break;
+                case "Manage Worker Shifts":
+                    await _workerController.ManageWorkerShifts(worker);
+                    break;
+                case "Back to Main Menu":
+                    inWorkerMenu = false;
+                    break;
+            }
+    
+            if (choice != "Back to Main Menu")
+            {
+                AnsiConsole.MarkupLine("\nPress any key to continue...");
+                Console.ReadKey(true);
+            }
+        }
+    }
+    
     // private void ManageShifts()
     // {
     //     bool inShiftMenu = true;

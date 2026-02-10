@@ -49,8 +49,7 @@ public class WorkerController : ControllerBase
 
         return Ok(worker);
     }
-
-
+    
     [HttpGet]
     public async Task<ActionResult<List<WorkerDto>>> GetAllWorkers()
     {
@@ -58,14 +57,14 @@ public class WorkerController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Worker>> UpdateWorker(int id, string workerName)
+    public async Task<ActionResult<Worker>> UpdateWorker(int id, WorkerCreationDto updateWorker)
     {
         var worker = await _workerService.GetWorkerByIdAsync(id);
         if (worker is null)
         {
             return NotFound();
         }
-        var updatedWorker = await _workerService.UpdateWorkerAsync(id, workerName);
+        var updatedWorker = await _workerService.UpdateWorkerAsync(id, updateWorker);
         if (updatedWorker is null)
         {
             return BadRequest("Can't update the worker!");

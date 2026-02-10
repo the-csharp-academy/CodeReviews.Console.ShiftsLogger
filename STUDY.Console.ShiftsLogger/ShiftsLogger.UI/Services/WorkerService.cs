@@ -15,18 +15,23 @@ public class WorkerService
     public async Task AddWorker(string name)
     { 
         await _httpClient.PostAsJsonAsync("http://localhost:5298/api/Worker", new { Name = name });
+        //TODO: return IsSuccessStatusCode
+        //return response.IsSuccessStatusCode;
     }
     
-    public bool DeleteWorker()
+    public async Task<bool> DeleteWorker(int id)
     {
-        return false;
+        var response = await _httpClient.DeleteAsync($"http://localhost:5298/api/Worker/{id}");
+        return response.IsSuccessStatusCode;
     }
-    public bool UpdateWorker()
+    public async Task<bool> UpdateWorker(int id, string name)
     {
-        return false;
+        var response = await _httpClient.PutAsJsonAsync($"http://localhost:5298/api/Worker/{id}", new { Name = name } );
+        return response.IsSuccessStatusCode;
     }
-    public void GetWorkerDetails()
+    public async Task<WorkerDetailsDTO?> GetWorkerDetails(int id)
     {
-        
+        var response = await _httpClient.GetFromJsonAsync<WorkerDetailsDTO>($"http://localhost:5298/api/Worker/{id}/Details");
+        return response;
     }
 }

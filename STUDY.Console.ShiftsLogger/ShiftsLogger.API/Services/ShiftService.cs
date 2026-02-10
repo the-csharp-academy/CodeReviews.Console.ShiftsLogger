@@ -24,10 +24,10 @@ public class ShiftService : IShiftService
 
     public async Task<GetShiftDto?> AddShiftAsync(CreateShiftDto shiftDto)
     {
-        //TODO: Check workerId nullability
         var worker = await _context.Workers.FindAsync(shiftDto.WorkerId);
         if (worker is null)
             return null;
+        
         var newShift = new Shift
         {
             StartTime = shiftDto.StartTime,
@@ -49,7 +49,7 @@ public class ShiftService : IShiftService
         }
         var result = new GetShiftDto
         {
-            Id = shift!.Id,
+            Id = shift.Id,
             StartTime = shift.StartTime,
             EndTime = shift.EndTime,
             WorkerId = shift.WorkerId,
@@ -68,7 +68,7 @@ public class ShiftService : IShiftService
             EndTime = s.EndTime
         }).ToListAsync();
         return result;
-    } //Done
+    }
 
     public async Task<GetShiftDto?> UpdateShiftAsync(int id, UpdateShiftDto updatedShift)
     {
