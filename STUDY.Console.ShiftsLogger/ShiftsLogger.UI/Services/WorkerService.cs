@@ -5,18 +5,17 @@ namespace ShiftsLogger.UI.Services;
 
 public class WorkerService
 {
-    private readonly HttpClient _httpClient = new();
+    private static readonly HttpClient _httpClient = new();
 
     public async Task<List<WorkerDto>?> GetAllWorkers()
     {
-        var response = await _httpClient.GetFromJsonAsync<List<WorkerDto>>($"{Configuration.ApiUrl}Worker");
+        var response = await _httpClient.GetFromJsonAsync<List<WorkerDto>>($"{Configuration.ApiUrl}/Worker");
         return response;
     }
-    public async Task AddWorker(string name)
+    public async Task<bool> AddWorker(string name)
     { 
-        await _httpClient.PostAsJsonAsync($"{Configuration.ApiUrl}/Worker", new { Name = name });
-        //TODO: return IsSuccessStatusCode
-        //return response.IsSuccessStatusCode;
+        var response = await _httpClient.PostAsJsonAsync($"{Configuration.ApiUrl}/Worker", new { Name = name });
+        return response.IsSuccessStatusCode;
     }
     
     public async Task<bool> DeleteWorker(int id)
