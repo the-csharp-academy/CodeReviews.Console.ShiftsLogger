@@ -15,8 +15,15 @@ public class WorkerController
 
         try
         {
-            await _workerService.AddWorker(name);
-            AnsiConsole.MarkupLine("[green]Worker added successfully![/]");
+            var workerIsAdded = await _workerService.AddWorker(name);
+            if (workerIsAdded)
+            {
+                AnsiConsole.MarkupLine("[green]Worker added successfully![/]");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[red]Worker not added![/]");
+            }
         }
         catch (Exception e)
         {

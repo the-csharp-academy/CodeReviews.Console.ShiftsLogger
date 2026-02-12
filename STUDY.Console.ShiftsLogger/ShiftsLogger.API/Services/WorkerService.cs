@@ -18,11 +18,9 @@ public interface IWorkerService
 public class WorkerService : IWorkerService
 {
     private readonly AppDbContext _context;
-    private readonly IShiftService _shiftService;
-    public WorkerService(AppDbContext context, IShiftService shiftService)
+    public WorkerService(AppDbContext context)
     {
         _context = context;
-        _shiftService = shiftService;
     }
     public async Task<WorkerDto?> AddWorkerAsync(WorkerCreationDto workerCreationDtoDto)
     {
@@ -68,22 +66,30 @@ public class WorkerService : IWorkerService
             Name = w.Name
         }).ToListAsync();
         return result;
-    } //DONE
+    }
 
     public async Task<WorkerWithShiftsDto?> GetWorkerWithShiftsAsync(int id)
     {
-        var worker = _context.Workers.Include(w => w.Shifts).Where(w => w.Id == id);
-        var shifts = await _shiftService.GetShiftsByWorkerIdAsync(id);
-        
-
-        var result = worker.Select(w => new WorkerWithShiftsDto
+        var worker = (await _context.Workers.Include(w => w.Shifts).Where(w => w.Id == id).ToListAsync()).SingleOrDefault();
+        if (worker is null)
         {
-            WorkerId = w.Id,
-            Name = w.Name,
-            Shifts = shifts ?? new List<ShiftDto>()
-        }).SingleOrDefault();
+            return null;
+        }
+        
+        var shiftsList = worker.Shifts.Select(s => new ShiftDto {
+            Id = s.Id,
+            StartTime = s.StartTime,
+            EndTime = s.EndTime
+        }).ToList();
 
-        return result;
+        WorkerWithShiftsDto workerWithShiftsDto = new()
+        {
+            Name = worker.Name,
+            Shifts = shiftsList,
+            WorkerId = worker.Id
+        };
+
+        return workerWithShiftsDto;
     }
 
     public async Task<WorkerDto?> GetWorkerByIdAsync(int id)

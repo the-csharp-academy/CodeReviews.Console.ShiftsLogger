@@ -57,7 +57,7 @@ public class WorkerController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Worker>> UpdateWorker(int id, WorkerCreationDto updateWorker)
+    public async Task<ActionResult<WorkerDto>> UpdateWorker(int id, WorkerCreationDto updateWorker)
     {
         var worker = await _workerService.GetWorkerByIdAsync(id);
         if (worker is null)

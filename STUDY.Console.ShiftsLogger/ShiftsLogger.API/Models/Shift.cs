@@ -1,4 +1,6 @@
-﻿namespace ShiftsLogger.API.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ShiftsLogger.API.Models;
 
 public class Shift
 {
