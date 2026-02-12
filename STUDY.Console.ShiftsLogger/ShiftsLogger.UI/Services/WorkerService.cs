@@ -9,29 +9,29 @@ public class WorkerService
 
     public async Task<List<WorkerDto>?> GetAllWorkers()
     {
-        var response = await _httpClient.GetFromJsonAsync<List<WorkerDto>>("http://localhost:5298/api/Worker");
+        var response = await _httpClient.GetFromJsonAsync<List<WorkerDto>>($"{Configuration.ApiUrl}Worker");
         return response;
     }
     public async Task AddWorker(string name)
     { 
-        await _httpClient.PostAsJsonAsync("http://localhost:5298/api/Worker", new { Name = name });
+        await _httpClient.PostAsJsonAsync($"{Configuration.ApiUrl}/Worker", new { Name = name });
         //TODO: return IsSuccessStatusCode
         //return response.IsSuccessStatusCode;
     }
     
     public async Task<bool> DeleteWorker(int id)
     {
-        var response = await _httpClient.DeleteAsync($"http://localhost:5298/api/Worker/{id}");
+        var response = await _httpClient.DeleteAsync($"{Configuration.ApiUrl}/Worker/{id}");
         return response.IsSuccessStatusCode;
     }
     public async Task<bool> UpdateWorker(int id, string name)
     {
-        var response = await _httpClient.PutAsJsonAsync($"http://localhost:5298/api/Worker/{id}", new { Name = name } );
+        var response = await _httpClient.PutAsJsonAsync($"{Configuration.ApiUrl}/Worker/{id}", new { Name = name } );
         return response.IsSuccessStatusCode;
     }
     public async Task<WorkerDetailsDTO?> GetWorkerDetails(int id)
     {
-        var response = await _httpClient.GetFromJsonAsync<WorkerDetailsDTO>($"http://localhost:5298/api/Worker/{id}/Details");
+        var response = await _httpClient.GetFromJsonAsync<WorkerDetailsDTO>($"{Configuration.ApiUrl}/Worker/{id}/Details");
         return response;
     }
 }

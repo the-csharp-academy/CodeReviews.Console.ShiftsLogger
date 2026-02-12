@@ -51,8 +51,6 @@ public class WorkerController
         }
     }
 
-    //==========================
-
     public async Task<string?> UpdateWorker(WorkerDto workerDto)
     {
         var newName =
@@ -65,8 +63,6 @@ public class WorkerController
         try
         {
             var workerIsUpdated = await _workerService.UpdateWorker(workerDto.Id, newName);
-
-
             if (workerIsUpdated)
             {
                 AnsiConsole.MarkupLine("[green]Worker updated successfully![/]");
@@ -81,17 +77,26 @@ public class WorkerController
         catch (Exception e)
         {
             AnsiConsole.MarkupLine($"[red]{e.Message}[/]");
+            AnsiConsole.MarkupLine("[red]Worker not updated![/]");
             return null;
         }
     }
 
     public async Task<bool> DeleteWorker(WorkerDto workerDto)
     {
-        var workerIsDeleted = await _workerService.DeleteWorker(workerDto.Id);
-        AnsiConsole.MarkupLine(workerIsDeleted
-            ? "[green]Worker deleted successfully![/]"
-            : "[red]Worker not deleted![/]");
-        return workerIsDeleted;
+        try
+        {
+            var workerIsDeleted = await _workerService.DeleteWorker(workerDto.Id);
+            AnsiConsole.MarkupLine(workerIsDeleted
+                ? "[green]Worker deleted successfully![/]"
+                : "[red]Worker not deleted![/]");
+            return workerIsDeleted;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return false;
+        }
     }
 
     public async Task ManageWorkerShifts(WorkerDto workerDto)
@@ -121,7 +126,8 @@ public class WorkerController
                     int i = 1;
                     foreach (var shift in workerDetails.Shifts)
                     {
-                        table.AddRow($"{i++}", shift.StartTime.ToString(CultureInfo.InvariantCulture), shift.EndTime.ToString(CultureInfo.InvariantCulture));
+                        table.AddRow($"{i++}", shift.StartTime.ToString(CultureInfo.InvariantCulture),
+                            shift.EndTime.ToString(CultureInfo.InvariantCulture));
                     }
 
                     AnsiConsole.Write(table);
@@ -130,23 +136,25 @@ public class WorkerController
 
                 var choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
-                        .Title($"Shifts Management for: [cyan]{workerDto.Name}[/]")
+                        .Title($"\nShifts Management for: [cyan]{workerDto.Name}[/]")
                         .AddChoices(choices));
-                ShiftsController _shiftsController = new ShiftsController();
+                ShiftsController shiftsController = new ShiftsController();
                 switch (choice)
                 {
                     case "Add New Shift":
-                        await _shiftsController.AddShift(workerDto);
+                        await shiftsController.AddShift(workerDto);
                         break;
                     case "Update Shift":
+                        await shiftsController.UpdateShift(workerDto);
                         break;
                     case "Delete Shift":
+                        await shiftsController.DeleteShift(workerDto);
                         break;
                     case "Back to Main Menu":
                         inShiftMenu = false;
                         break;
                 }
-                
+
                 if (choice != "Back to Main Menu")
                 {
                     AnsiConsole.MarkupLine("\nPress any key to continue...");
