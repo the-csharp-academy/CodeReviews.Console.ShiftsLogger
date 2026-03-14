@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ClassLibrary/ClassLibrary.csproj" Id="672d1df6-a97a-4c37-bb65-8b4a2b5f2b13" />
+  <Project Path="ShiftsAPI/ShiftsAPI.csproj" Id="20776c41-21e3-490e-a60e-85de436a35c9" />
+  <Project Path="ShiftsUI/ShiftsUI.csproj" Id="65a8beec-956c-411e-a63e-88505a7df96a" />
+</Solution>
