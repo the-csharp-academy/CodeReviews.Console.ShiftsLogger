@@ -6,9 +6,6 @@ namespace ShiftsLoggerUI.Menus
 {
     internal class UserInterface
     {
-
-
-
         internal static async Task MainMenu()
         {
             bool running = true;

@@ -55,7 +55,6 @@ namespace ShiftsLoggerUI.Controllers
                          .Start("Adding shift to database", ctx =>
                          {
                              ctx.Spinner(Spinner.Known.Aesthetic);
-                             Thread.Sleep(3000);
                          });
         }
 
@@ -103,7 +102,6 @@ namespace ShiftsLoggerUI.Controllers
 
                 case "Start time":
                 {
-                    //var existingShift = await ShiftsService.GetShiftById(shiftId);
                     
                         string newStartTime = AnsiConsole.Ask<string>("Enter the new start time in the format: [underline][bold]yyyy-MM-dd HH:mm[/][/]");
                         while (!DateTime.TryParseExact(newStartTime, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
@@ -119,7 +117,6 @@ namespace ShiftsLoggerUI.Controllers
 
                 case "End time":
                 {
-                    //var existingShift = await ShiftsService.GetShiftById(shiftId);
                     
                         string newEndTime = AnsiConsole.Ask<string>("Enter the new end time in the format: [underline][bold]yyyy-MM-dd HH:mm[/][/]");
                         while (!DateTime.TryParseExact(newEndTime, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
