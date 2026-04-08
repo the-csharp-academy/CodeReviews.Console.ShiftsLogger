@@ -65,10 +65,19 @@ namespace ShiftsLoggerUI.Controllers
 
             var shiftsService = new ShiftsService();
             await shiftsService.ShowAllShifts(false);
+            
 
             int shiftId = AnsiConsole.Ask<int>("Enter the [underline][bold]Shift ID[/][/] of the shift you want to update.");
 
             Console.WriteLine($"You want to update shift with ID: {shiftId}");
+            var existingShift = await ShiftsService.GetShiftById(shiftId);
+
+            if (existingShift == null)
+            {
+                Console.WriteLine("Shift not found. Please try again.");
+                await UpdateShift();
+                return;
+            }
 
             var choice = AnsiConsole.Prompt(
                new SelectionPrompt<string>()
@@ -84,20 +93,18 @@ namespace ShiftsLoggerUI.Controllers
             {
                 case "Title":
                 {
-                    var existingShift = await ShiftsService.GetShiftById(shiftId);
-                    if (existingShift != null)
-                    {
+                    
+                    
                         existingShift.JobTitle = AnsiConsole.Ask<string>("Enter the new job title.");
                         await shiftsService.UpdateShift(shiftId, existingShift);
-                    }
+                    
                     break;
                 }
 
                 case "Start time":
                 {
-                    var existingShift = await ShiftsService.GetShiftById(shiftId);
-                    if (existingShift != null)
-                    {
+                    //var existingShift = await ShiftsService.GetShiftById(shiftId);
+                    
                         string newStartTime = AnsiConsole.Ask<string>("Enter the new start time in the format: [underline][bold]yyyy-MM-dd HH:mm[/][/]");
                         while (!DateTime.TryParseExact(newStartTime, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
                         {
@@ -106,15 +113,14 @@ namespace ShiftsLoggerUI.Controllers
                         }
                         existingShift.start = DateTime.ParseExact(newStartTime, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
                         await shiftsService.UpdateShift(shiftId, existingShift);
-                    }
+                    
                     break;
                 }
 
                 case "End time":
                 {
-                    var existingShift = await ShiftsService.GetShiftById(shiftId);
-                    if (existingShift != null)
-                    {
+                    //var existingShift = await ShiftsService.GetShiftById(shiftId);
+                    
                         string newEndTime = AnsiConsole.Ask<string>("Enter the new end time in the format: [underline][bold]yyyy-MM-dd HH:mm[/][/]");
                         while (!DateTime.TryParseExact(newEndTime, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
                         {
@@ -129,7 +135,7 @@ namespace ShiftsLoggerUI.Controllers
                         }
                         existingShift.end = DateTime.ParseExact(newEndTime, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
                         await shiftsService.UpdateShift(shiftId, existingShift);
-                    }
+                    
                     break;
                 }
             }
