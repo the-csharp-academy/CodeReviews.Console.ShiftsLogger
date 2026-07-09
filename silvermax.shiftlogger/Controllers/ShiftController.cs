@@ -52,7 +52,7 @@ public class ShiftController : ControllerBase
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<Shift>> UpdateShift(Guid id, Shift updatedShift)
     {
-        var result = _service.UpdateShiftAsync(id, updatedShift, CancellationToken.None);
+        var result = await _service.UpdateShiftAsync(id, updatedShift, CancellationToken.None);
 
         if (result is null)
             return NotFound();
