@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../silvermax.shiftlogger.UI/silvermax.shiftlogger.UI.csproj" Id="e057f530-fc6f-48e7-be1f-1ea7b9ba53a2" />
+  <Project Path="silvermax.shiftlogger.csproj" />
+</Solution>
