@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="ShiftLogger.UI.UnitTest/ShiftLogger.UI.UnitTest.csproj" Id="2d1f8293-e413-49d3-ae59-52e8ddd736b3" />
+  <Project Path="ShiftLogger.UI/ShiftLogger.UI.csproj" />
+</Solution>
