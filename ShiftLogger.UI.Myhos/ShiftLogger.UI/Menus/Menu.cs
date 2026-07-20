@@ -3,6 +3,7 @@ using ShiftLogger.UI.Model;
 using ShiftLogger.UI.Services;
 using Spectre.Console;
 using static ShiftLogger.UI.Menus.Enums;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ShiftLogger.UI.Menus;
 
@@ -103,17 +104,15 @@ internal class Menu
     {
         Console.Clear();
 
-        CreateWorkerShiftDTO dto = new()
-        {
-
-            WorkerName = GetWorkerName(),
-            Date = GetDateShift(),
-            StartTime = GetStartTime(),
-            ShiftTime = GetShiftTime(),
-        };
+        CreateWorkerShiftDTO dto = new();
 
 
+        dto.WorkerName = GetWorkerName();
+        dto.Date = GetDateShift();
+        dto.StartTime = GetStartTime();
         dto.EndTime = GetEndTime(dto.StartTime);
+        dto.ShiftTime = GetShiftTime();
+        
 
         WorkerShift result = await workerShiftService.CreateWorkerShift(dto);
 
