@@ -87,7 +87,7 @@ internal class WorkerShiftService
     {
         try
         {
-            var response = await sharedClient.GetAsync("All");
+            var response = await sharedClient.GetAsync("ViewAll");
 
             if (response.StatusCode == HttpStatusCode.InternalServerError)
             {
@@ -119,7 +119,7 @@ internal class WorkerShiftService
     {
         try
         {
-            var response = await sharedClient.GetAsync($"Get={id}");
+            var response = await sharedClient.GetAsync($"ViewOne={id}");
 
             if (response.StatusCode == HttpStatusCode.NotFound)
             {

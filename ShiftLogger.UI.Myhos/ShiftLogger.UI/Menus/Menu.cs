@@ -211,6 +211,7 @@ internal class Menu
         }
         else
         {
+            TableGenerator.CreateDetailsTable(selectedShift,"Shift Deleted");
             AnsiConsole.MarkupLine($"[#008148]{result}[/]");
         }
 
@@ -296,6 +297,11 @@ internal class Menu
     private async Task<WorkerShift> GetOptionWorkerShift(string message)
     {
         List<WorkerShift> workerShifts = await workerShiftService.GetAllWorkerShifts();
+
+        if(workerShifts == null) 
+        {
+            return null;
+        }
 
         WorkerShift selectedShift = AnsiConsole.Prompt(
             new SelectionPrompt<WorkerShift>()
