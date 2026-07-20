@@ -72,9 +72,7 @@ internal class WorkerShiftService
 
             response.EnsureSuccessStatusCode();
 
-            string message = await response.Content.ReadAsStringAsync();
-
-            return message;
+            return "Worker Shift deleted succesfully";
         }
         catch (Exception ex)
         {

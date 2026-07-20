@@ -211,7 +211,8 @@ internal class Menu
         }
         else
         {
-            TableGenerator.CreateDetailsTable(selectedShift,"Shift Deleted");
+            var table = TableGenerator.CreateDetailsTable(selectedShift,"Deleted Shift");
+            AnsiConsole.Write(table);
             AnsiConsole.MarkupLine($"[#008148]{result}[/]");
         }
 
@@ -298,7 +299,7 @@ internal class Menu
     {
         List<WorkerShift> workerShifts = await workerShiftService.GetAllWorkerShifts();
 
-        if(workerShifts == null) 
+        if (workerShifts == null) 
         {
             return null;
         }
