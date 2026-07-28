@@ -1,0 +1,6 @@
+@ShiftsLogger_HostAddress = http://localhost:5062
+
+GET {{ShiftsLogger_HostAddress}}/ShiftsLogger/
+Accept: application/json
+
+###
