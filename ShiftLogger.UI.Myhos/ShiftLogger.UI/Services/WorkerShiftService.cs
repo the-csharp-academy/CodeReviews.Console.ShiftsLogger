@@ -11,14 +11,14 @@ internal class WorkerShiftService
 {
     private static HttpClient sharedClient = new()
     {
-        BaseAddress = new Uri("https://localhost:7138/api/WorkerShift/"),
+        BaseAddress = new Uri("https://localhost:7138/api/WorkerShifts/"),
     };
 
     internal async Task<WorkerShift> CreateWorkerShift(CreateWorkerShiftDTO workerShiftDTO)
     {
         try
         {
-            var response = await sharedClient.PostAsJsonAsync("Create", workerShiftDTO);
+            var response = await sharedClient.PostAsJsonAsync("",workerShiftDTO);
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
@@ -56,7 +56,7 @@ internal class WorkerShiftService
     {
         try 
         {
-            var response = await sharedClient.DeleteAsync($"Delete={shiftId}");
+            var response = await sharedClient.DeleteAsync($"{shiftId}");
 
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
@@ -85,7 +85,7 @@ internal class WorkerShiftService
     {
         try
         {
-            var response = await sharedClient.GetAsync("ViewAll");
+            var response = await sharedClient.GetAsync("");
 
             if (response.StatusCode == HttpStatusCode.InternalServerError)
             {
@@ -117,7 +117,7 @@ internal class WorkerShiftService
     {
         try
         {
-            var response = await sharedClient.GetAsync($"ViewOne={id}");
+            var response = await sharedClient.GetAsync($"{id}");
 
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
@@ -155,7 +155,7 @@ internal class WorkerShiftService
     {
         try
         {
-            var response = await sharedClient.PatchAsJsonAsync($"Update={id}", dto);
+            var response = await sharedClient.PatchAsJsonAsync($"{id}", dto);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
