@@ -14,7 +14,7 @@ internal class WorkerShiftService
         BaseAddress = new Uri("https://localhost:7138/api/WorkerShifts/"),
     };
 
-    internal async Task<WorkerShift> CreateWorkerShift(CreateWorkerShiftDTO workerShiftDTO)
+    internal async Task<Shift> CreateWorkerShift(CreateWorkerShiftDTO workerShiftDTO)
     {
         try
         {
@@ -41,7 +41,7 @@ internal class WorkerShiftService
                 PropertyNameCaseInsensitive = true
             };
 
-            WorkerShift? result = JsonSerializer.Deserialize<WorkerShift>(json, options);
+            Shift? result = JsonSerializer.Deserialize<Shift>(json, options);
 
             return result;
         }
@@ -81,7 +81,7 @@ internal class WorkerShiftService
         }
     }
 
-    internal async Task<List<WorkerShift>> GetAllWorkerShifts()
+    internal async Task<List<Shift>> GetAllWorkerShifts()
     {
         try
         {
@@ -102,7 +102,7 @@ internal class WorkerShiftService
                 PropertyNameCaseInsensitive = true
             };
 
-            List<WorkerShift>? result = JsonSerializer.Deserialize<List<WorkerShift>>(json, options);
+            List<Shift>? result = JsonSerializer.Deserialize<List<Shift>>(json, options);
 
             return result;
         }
@@ -113,7 +113,7 @@ internal class WorkerShiftService
         }
     }
 
-    internal async Task<WorkerShift> GetWorkerShiftById(string id)
+    internal async Task<Shift> GetWorkerShiftById(string id)
     {
         try
         {
@@ -140,7 +140,7 @@ internal class WorkerShiftService
                 PropertyNameCaseInsensitive = true
             };
 
-            WorkerShift? result = JsonSerializer.Deserialize<WorkerShift>(json, options);
+            Shift? result = JsonSerializer.Deserialize<Shift>(json, options);
 
             return result;
         }
@@ -151,7 +151,7 @@ internal class WorkerShiftService
         }
     }
 
-    internal async Task<WorkerShift> UpdateWorkerShift(int id, UpdateWorkerShiftDTO dto)
+    internal async Task<Shift> UpdateWorkerShift(int id, UpdateWorkerShiftDTO dto)
     {
         try
         {
@@ -184,7 +184,7 @@ internal class WorkerShiftService
                 PropertyNameCaseInsensitive = true
             };
 
-            WorkerShift result = JsonSerializer.Deserialize<WorkerShift>(json, options);
+            Shift result = JsonSerializer.Deserialize<Shift>(json, options);
 
             return result;
         }

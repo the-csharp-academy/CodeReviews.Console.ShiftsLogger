@@ -52,7 +52,7 @@ internal class Menu
     {
         Console.Clear();
 
-        List<WorkerShift> result = await workerShiftService.GetAllWorkerShifts();
+        List<Shift> result = await workerShiftService.GetAllWorkerShifts();
 
         if (result == null)
         {
@@ -73,7 +73,7 @@ internal class Menu
     {
         Console.Clear();
 
-        WorkerShift selectedShift = await GetOptionWorkerShift("Select a shift to view");
+        Shift selectedShift = await GetOptionWorkerShift("Select a shift to view");
 
         if (selectedShift == null)
         {
@@ -81,7 +81,7 @@ internal class Menu
         }
         else
         {
-            WorkerShift result = await workerShiftService.GetWorkerShiftById(selectedShift.ShiftId.ToString());
+            Shift result = await workerShiftService.GetWorkerShiftById(selectedShift.ShiftId.ToString());
 
             if (result == null)
             {
@@ -114,7 +114,7 @@ internal class Menu
         dto.ShiftTime = GetShiftTime();
         
 
-        WorkerShift result = await workerShiftService.CreateWorkerShift(dto);
+        Shift result = await workerShiftService.CreateWorkerShift(dto);
 
         if (result == null)
         {
@@ -135,7 +135,7 @@ internal class Menu
     {
         Console.Clear();
 
-        WorkerShift selectedShift = await GetOptionWorkerShift("Select a shift to update");
+        Shift selectedShift = await GetOptionWorkerShift("Select a shift to update");
 
         if (selectedShift == null)
             return;
@@ -183,7 +183,7 @@ internal class Menu
 
         }
 
-        WorkerShift result = await workerShiftService.UpdateWorkerShift(selectedShift.ShiftId, dto);
+        Shift result = await workerShiftService.UpdateWorkerShift(selectedShift.ShiftId, dto);
 
         if (result == null)
         {
@@ -201,7 +201,7 @@ internal class Menu
     {
         Console.Clear();
 
-        WorkerShift selectedShift = await GetOptionWorkerShift("Select a shift to Delete");
+        Shift selectedShift = await GetOptionWorkerShift("Select a shift to Delete");
 
         string result = await workerShiftService.DeleteWorkerShift(selectedShift.ShiftId);
 
@@ -295,17 +295,17 @@ internal class Menu
         return options.ToString();
     }
 
-    private async Task<WorkerShift> GetOptionWorkerShift(string message)
+    private async Task<Shift> GetOptionWorkerShift(string message)
     {
-        List<WorkerShift> workerShifts = await workerShiftService.GetAllWorkerShifts();
+        List<Shift> workerShifts = await workerShiftService.GetAllWorkerShifts();
 
         if (workerShifts == null) 
         {
             return null;
         }
 
-        WorkerShift selectedShift = AnsiConsole.Prompt(
-            new SelectionPrompt<WorkerShift>()
+        Shift selectedShift = AnsiConsole.Prompt(
+            new SelectionPrompt<Shift>()
             .Title($"{message}")
             .UseConverter(shift => $"{shift.WorkerName} | [#558B6E]({shift.Date:yyyy-MM-dd})[/] | {shift.ShiftTime}")
             .AddChoices(workerShifts));
@@ -313,7 +313,7 @@ internal class Menu
         return selectedShift;
     }
 
-    private Grid CreateUpdateView(WorkerShift shift)
+    private Grid CreateUpdateView(Shift shift)
     {
         var grid = new Grid();
 

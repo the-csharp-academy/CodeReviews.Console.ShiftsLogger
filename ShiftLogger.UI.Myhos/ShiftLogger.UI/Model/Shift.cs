@@ -1,6 +1,6 @@
 ﻿namespace ShiftLogger.UI.Model;
 
-internal class WorkerShift
+internal class Shift
 {
     public int ShiftId { get; set; }
     public string WorkerName { get; set; }
