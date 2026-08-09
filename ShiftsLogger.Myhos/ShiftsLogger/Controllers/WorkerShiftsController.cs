@@ -7,18 +7,18 @@ namespace ShiftsLogger.Controllers;
 
 [ApiController]
 [Route("api/[Controller]")]
-public class WorkerShiftController(IWorkerShiftService workerShiftService) : Controller
+public class WorkerShiftsController(IWorkerShiftService workerShiftService) : Controller
 {
     private readonly IWorkerShiftService _workerShiftService = workerShiftService;
 
 
-    [HttpGet("All")]
+    [HttpGet]
     public ActionResult<List<WorkerShift>> GetAllWorkerShifts()
     {
         return Ok(_workerShiftService.GetWorkerShifts());
     }
 
-    [HttpGet("Get={id}")]
+    [HttpGet("{id}")]
     public ActionResult<WorkerShift> GetWorkerShiftById(int id)
     {
         var result = _workerShiftService.GetWorkerShitftById(id);
@@ -31,7 +31,7 @@ public class WorkerShiftController(IWorkerShiftService workerShiftService) : Con
         return Ok(result);
     }
 
-    [HttpPost("Create")]
+    [HttpPost]
     public ActionResult<WorkerShift> CreateWorkerShift(CreatedWorkerShiftDTO dto)
     {
         WorkerShift workerShift = _workerShiftService.CreateWorkerShift(dto);
@@ -39,7 +39,7 @@ public class WorkerShiftController(IWorkerShiftService workerShiftService) : Con
         return CreatedAtAction(nameof(GetWorkerShiftById), new { id = workerShift.ShiftId}, workerShift);
     }
 
-    [HttpPatch("Update={id}")]
+    [HttpPatch("{id}")]
     public ActionResult<WorkerShift> UpdateWorkerShitft(int id, [FromBody] UpdateWorkerShiftDto dto)
     {
         WorkerShift? workerShift = _workerShiftService.UpdateWorkerShift(id, dto);
@@ -52,7 +52,7 @@ public class WorkerShiftController(IWorkerShiftService workerShiftService) : Con
         return Ok(workerShift);
     }
 
-    [HttpDelete("Delete={id}")]
+    [HttpDelete("{id}")]
     public IActionResult DeleteWorkerShift(int id)
     {
         bool result = _workerShiftService.DeleteWorkerShift(id);
