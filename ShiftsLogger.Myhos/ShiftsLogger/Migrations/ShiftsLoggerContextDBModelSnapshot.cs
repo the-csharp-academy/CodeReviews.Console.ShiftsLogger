@@ -17,7 +17,7 @@ namespace ShiftsLogger.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.9");
 
-            modelBuilder.Entity("ShiftsLogger.Model.WorkerShift", b =>
+            modelBuilder.Entity("ShiftsLogger.Model.Shift", b =>
                 {
                     b.Property<int>("ShiftId")
                         .ValueGeneratedOnAdd()

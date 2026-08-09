@@ -16,9 +16,9 @@ public class WorkerShiftService : IWorkerShiftService
        _logger = logger;
     }
 
-    public WorkerShift CreateWorkerShift(CreatedWorkerShiftDTO dto)
+    public Shift CreateWorkerShift(CreatedWorkerShiftDTO dto)
     {
-        WorkerShift workerShift = new()
+        Shift workerShift = new()
         {
             WorkerName = dto.WorkerName,
             Date = dto.Date,
@@ -41,7 +41,7 @@ public class WorkerShiftService : IWorkerShiftService
 
     public bool DeleteWorkerShift(int id)
     {
-        WorkerShift? workerShift = _contextDB.WorkerShifts.Find(id);
+        Shift? workerShift = _contextDB.WorkerShifts.Find(id);
 
         if(workerShift == null) 
         {
@@ -58,18 +58,18 @@ public class WorkerShiftService : IWorkerShiftService
         return true;
     }
 
-    public List<WorkerShift> GetWorkerShifts()
+    public List<Shift> GetWorkerShifts()
     {
-        List<WorkerShift> workerShifts = _contextDB.WorkerShifts.ToList();
+        List<Shift> workerShifts = _contextDB.WorkerShifts.ToList();
 
         _logger.LogInformation("Retrieved {Count} worker shifts.",workerShifts.Count);
 
         return workerShifts;
     }
 
-    public WorkerShift? GetWorkerShitftById(int id)
+    public Shift? GetWorkerShitftById(int id)
     {
-        WorkerShift workerShift = _contextDB.WorkerShifts.Find(id);
+        Shift workerShift = _contextDB.WorkerShifts.Find(id);
 
         if (workerShift == null) 
         {
@@ -83,9 +83,9 @@ public class WorkerShiftService : IWorkerShiftService
         return workerShift;
     }
 
-    public WorkerShift UpdateWorkerShift(int id, UpdateWorkerShiftDto dto)
+    public Shift UpdateWorkerShift(int id, UpdateWorkerShiftDto dto)
     {
-        WorkerShift? workerShift = _contextDB.WorkerShifts.Find(id);
+        Shift? workerShift = _contextDB.WorkerShifts.Find(id);
 
         if (workerShift == null) 
         {

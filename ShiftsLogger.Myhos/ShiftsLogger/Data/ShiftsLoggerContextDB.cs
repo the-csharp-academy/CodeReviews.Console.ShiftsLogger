@@ -10,12 +10,12 @@ public class ShiftsLoggerContextDB : DbContext
 
     }
 
-    public DbSet<WorkerShift> WorkerShifts { get; set; }
+    public DbSet<Shift> WorkerShifts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<WorkerShift>().HasData(
-    new WorkerShift
+        modelBuilder.Entity<Shift>().HasData(
+    new Shift
     {
         ShiftId = 1,
         WorkerName = "Juan Pérez",
@@ -27,7 +27,7 @@ public class ShiftsLoggerContextDB : DbContext
         CreatedAt = new DateTime(2026, 7, 1, 5, 50, 0),
         UpdateAt = new DateTime(2026, 7, 1, 14, 5, 0)
     },
-    new WorkerShift
+    new Shift
     {
         ShiftId = 2,
         WorkerName = "María Gómez",
@@ -39,7 +39,7 @@ public class ShiftsLoggerContextDB : DbContext
         CreatedAt = new DateTime(2026, 7, 1, 13, 50, 0),
         UpdateAt = new DateTime(2026, 7, 1, 22, 5, 0)
     },
-    new WorkerShift
+    new Shift
     {
         ShiftId = 3,
         WorkerName = "Carlos Rodríguez",
@@ -51,7 +51,7 @@ public class ShiftsLoggerContextDB : DbContext
         CreatedAt = new DateTime(2026, 7, 2, 21, 50, 0),
         UpdateAt = new DateTime(2026, 7, 3, 6, 5, 0)
     },
-    new WorkerShift
+    new Shift
     {
         ShiftId = 4,
         WorkerName = "Ana Martínez",
@@ -63,7 +63,7 @@ public class ShiftsLoggerContextDB : DbContext
         CreatedAt = new DateTime(2026, 7, 2, 6, 50, 0),
         UpdateAt = new DateTime(2026, 7, 2, 15, 5, 0)
     },
-    new WorkerShift
+    new Shift
     {
         ShiftId = 5,
         WorkerName = "Luis Fernández",
@@ -75,7 +75,7 @@ public class ShiftsLoggerContextDB : DbContext
         CreatedAt = new DateTime(2026, 7, 3, 7, 50, 0),
         UpdateAt = new DateTime(2026, 7, 3, 16, 5, 0)
     },
-    new WorkerShift
+    new Shift
     {
         ShiftId = 6,
         WorkerName = "Laura Sánchez",
@@ -87,7 +87,7 @@ public class ShiftsLoggerContextDB : DbContext
         CreatedAt = new DateTime(2026, 7, 3, 14, 50, 0),
         UpdateAt = new DateTime(2026, 7, 3, 23, 5, 0)
     },
-    new WorkerShift
+    new Shift
     {
         ShiftId = 7,
         WorkerName = "Pedro Ramírez",
@@ -99,7 +99,7 @@ public class ShiftsLoggerContextDB : DbContext
         CreatedAt = new DateTime(2026, 7, 4, 6, 20, 0),
         UpdateAt = new DateTime(2026, 7, 4, 14, 35, 0)
     },
-    new WorkerShift
+    new Shift
     {
         ShiftId = 8,
         WorkerName = "Sofía Torres",
@@ -111,7 +111,7 @@ public class ShiftsLoggerContextDB : DbContext
         CreatedAt = new DateTime(2026, 7, 4, 13, 20, 0),
         UpdateAt = new DateTime(2026, 7, 4, 21, 35, 0)
     },
-    new WorkerShift
+    new Shift
     {
         ShiftId = 9,
         WorkerName = "Diego Morales",
@@ -123,7 +123,7 @@ public class ShiftsLoggerContextDB : DbContext
         CreatedAt = new DateTime(2026, 7, 5, 21, 50, 0),
         UpdateAt = new DateTime(2026, 7, 6, 6, 5, 0)
     },
-    new WorkerShift
+    new Shift
     {
         ShiftId = 10,
         WorkerName = "Camila Herrera",

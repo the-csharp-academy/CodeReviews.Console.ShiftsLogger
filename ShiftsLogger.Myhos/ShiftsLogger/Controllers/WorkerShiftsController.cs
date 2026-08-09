@@ -13,13 +13,13 @@ public class WorkerShiftsController(IWorkerShiftService workerShiftService) : Co
 
 
     [HttpGet]
-    public ActionResult<List<WorkerShift>> GetAllWorkerShifts()
+    public ActionResult<List<Shift>> GetAllWorkerShifts()
     {
         return Ok(_workerShiftService.GetWorkerShifts());
     }
 
     [HttpGet("{id}")]
-    public ActionResult<WorkerShift> GetWorkerShiftById(int id)
+    public ActionResult<Shift> GetWorkerShiftById(int id)
     {
         var result = _workerShiftService.GetWorkerShitftById(id);
 
@@ -32,17 +32,17 @@ public class WorkerShiftsController(IWorkerShiftService workerShiftService) : Co
     }
 
     [HttpPost]
-    public ActionResult<WorkerShift> CreateWorkerShift(CreatedWorkerShiftDTO dto)
+    public ActionResult<Shift> CreateWorkerShift(CreatedWorkerShiftDTO dto)
     {
-        WorkerShift workerShift = _workerShiftService.CreateWorkerShift(dto);
+        Shift workerShift = _workerShiftService.CreateWorkerShift(dto);
 
         return CreatedAtAction(nameof(GetWorkerShiftById), new { id = workerShift.ShiftId}, workerShift);
     }
 
     [HttpPatch("{id}")]
-    public ActionResult<WorkerShift> UpdateWorkerShitft(int id, [FromBody] UpdateWorkerShiftDto dto)
+    public ActionResult<Shift> UpdateWorkerShitft(int id, [FromBody] UpdateWorkerShiftDto dto)
     {
-        WorkerShift? workerShift = _workerShiftService.UpdateWorkerShift(id, dto);
+        Shift? workerShift = _workerShiftService.UpdateWorkerShift(id, dto);
 
         if(workerShift == null) 
         {

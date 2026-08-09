@@ -2,7 +2,7 @@
 
 namespace ShiftsLogger.Model;
 
-public class WorkerShift
+public class Shift
 {
     [Key]
     public int ShiftId { get; set; }
