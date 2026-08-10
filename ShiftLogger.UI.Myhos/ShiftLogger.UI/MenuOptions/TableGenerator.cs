@@ -110,6 +110,7 @@ Select the field you want to update.
 • Shift Time
 
 [blue]Save Changes[/] to apply the modifications.
+[yellow]Working hours will not be updated until the changes are saved[/].
 [red]Cancel[/] to discard them."))
         {
             Header = new PanelHeader("Instructions")

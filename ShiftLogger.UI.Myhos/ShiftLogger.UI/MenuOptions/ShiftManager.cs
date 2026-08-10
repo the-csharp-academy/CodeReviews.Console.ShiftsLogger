@@ -107,13 +107,26 @@ internal class ShiftManager
 
         UpdateWorkerShiftDTO dto = new();
 
+        Shift workingShift = new()
+        {
+            ShiftId = selectedShift.ShiftId,
+            WorkerName = selectedShift.WorkerName,
+            Date = selectedShift.Date,
+            StartTime = selectedShift.StartTime,
+            EndTime = selectedShift.EndTime,
+            HoursWorked = selectedShift.HoursWorked,
+            ShiftTime = selectedShift.ShiftTime,
+            CreatedAt = selectedShift.CreatedAt,
+            UpdateAt = selectedShift.UpdateAt
+        };
+
         bool updating = true;
 
         while (updating)
         {
             Console.Clear();
 
-            AnsiConsole.Write(TableGenerator.CreateUpdateView(selectedShift));
+            AnsiConsole.Write(TableGenerator.CreateUpdateView(workingShift));
 
             UpdateOptions option = AnsiConsole.Prompt(
         new SelectionPrompt<UpdateOptions>()
@@ -125,20 +138,23 @@ internal class ShiftManager
             {
                 case UpdateOptions.WorkerName:
                     dto.WorkerName = userInputs.GetWorkerName();
+                    workingShift.WorkerName = dto.WorkerName;
                     break;
                 case UpdateOptions.Date:
                     dto.Date = userInputs.GetDateShift();
+                    workingShift.Date = (DateOnly)dto.Date;
                     break;
                 case UpdateOptions.StartTime:
                     dto.StartTime = userInputs.GetStartTime();
+                    workingShift.StartTime = (TimeOnly)dto.StartTime;
                     break;
                 case UpdateOptions.EndTime:
-                    dto.EndTime = userInputs.GetEndTime(dto.StartTime == null
-                        ? selectedShift.StartTime
-                        : (TimeOnly)dto.StartTime);
+                    dto.EndTime = userInputs.GetEndTime(workingShift.StartTime);
+                    workingShift.EndTime = (TimeOnly)dto.EndTime;
                     break;
                 case UpdateOptions.ShiftTime:
                     dto.ShiftTime = userInputs.GetShiftTime();
+                    workingShift.ShiftTime = dto.ShiftTime;
                     break;
                 case UpdateOptions.SaveChanges:
                     updating = false;
@@ -163,6 +179,7 @@ internal class ShiftManager
         AnsiConsole.WriteLine("Press any key to continue..");
         Console.ReadKey();
     }
+
     internal async Task DeleteWorkerShift()
     {
         Console.Clear();
