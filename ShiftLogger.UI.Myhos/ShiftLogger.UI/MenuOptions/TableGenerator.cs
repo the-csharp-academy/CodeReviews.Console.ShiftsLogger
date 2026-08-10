@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using ShiftLogger.UI.Model;
+using Spectre.Console;
 using System.Reflection;
 
 namespace ShiftLogger.UI.Menus;
@@ -46,11 +47,11 @@ internal class TableGenerator
         AnsiConsole.Write(table);
     }
 
-    internal static Table CreateDetailsTable<T>(T item, string? title)
+    internal static Table CreateDetailsTable<T>(T item, string? title) where T : notnull
     {
         var table = new Table();
 
-        if(title != null) 
+        if (title != null)
         {
             table.Title($"[#A1E8CC]{title}[/]");
         }
@@ -66,18 +67,14 @@ internal class TableGenerator
 
         foreach (var property in properties)
         {
-            var rawValue = property.GetValue(item);
+            object? rawValue = property.GetValue(item);
 
-            string value;
-
-            if (rawValue is decimal decimalValue)
+            string value = rawValue switch
             {
-                value = decimalValue.ToString("F1");
-            }
-            else
-            {
-                value = rawValue.ToString();
-            }
+                decimal decimalValue => decimalValue.ToString("F1"),
+                null => "N/A",
+                _ => rawValue.ToString() ?? "N/A"
+            };
 
             table.AddRow(property.Name, value);
         }
@@ -85,5 +82,41 @@ internal class TableGenerator
         table.BorderColor(Color.FromHex("#2A628F"));
 
         return table;
+    }
+
+    internal static Grid CreateUpdateView(Shift shift)
+    {
+        var grid = new Grid();
+
+        grid.AddColumn(new GridColumn().Width(70));
+        grid.AddColumn(new GridColumn().Width(40));
+
+        var detailsPanel = new Panel(
+            TableGenerator.CreateDetailsTable(shift, null))
+        {
+            Header = new PanelHeader("Current Shift")
+        };
+
+        var instructionsPanel = new Panel(
+            new Markup(
+    @"[yellow]Update Worker Shift[/]
+
+Select the field you want to update.
+
+• Worker Name
+• Date
+• Start Time
+• End Time
+• Shift Time
+
+[blue]Save Changes[/] to apply the modifications.
+[red]Cancel[/] to discard them."))
+        {
+            Header = new PanelHeader("Instructions")
+        };
+
+        grid.AddRow(detailsPanel, instructionsPanel);
+
+        return grid;
     }
 }

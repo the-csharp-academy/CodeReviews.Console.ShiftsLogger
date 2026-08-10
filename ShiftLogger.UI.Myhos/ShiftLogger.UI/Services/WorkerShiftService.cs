@@ -14,11 +14,11 @@ internal class WorkerShiftService
         BaseAddress = new Uri("https://localhost:7138/api/WorkerShifts/"),
     };
 
-    internal async Task<Shift> CreateWorkerShift(CreateWorkerShiftDTO workerShiftDTO)
+    internal async Task<Shift?> CreateWorkerShift(CreateWorkerShiftDTO workerShiftDTO)
     {
         try
         {
-            var response = await sharedClient.PostAsJsonAsync("",workerShiftDTO);
+            var response = await sharedClient.PostAsJsonAsync("", workerShiftDTO);
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
@@ -52,9 +52,9 @@ internal class WorkerShiftService
         }
     }
 
-    internal async Task<string> DeleteWorkerShift(int shiftId)
+    internal async Task<string?> DeleteWorkerShift(int shiftId)
     {
-        try 
+        try
         {
             var response = await sharedClient.DeleteAsync($"{shiftId}");
 
@@ -81,7 +81,7 @@ internal class WorkerShiftService
         }
     }
 
-    internal async Task<List<Shift>> GetAllWorkerShifts()
+    internal async Task<List<Shift>?> GetAllWorkerShifts()
     {
         try
         {
@@ -104,6 +104,12 @@ internal class WorkerShiftService
 
             List<Shift>? result = JsonSerializer.Deserialize<List<Shift>>(json, options);
 
+            if (result is null)
+            {
+                AnsiConsole.MarkupLine("[#F0362C]Failed to parse the server response.[/]");
+                return null;
+            }
+
             return result;
         }
         catch (Exception ex)
@@ -113,7 +119,7 @@ internal class WorkerShiftService
         }
     }
 
-    internal async Task<Shift> GetWorkerShiftById(string id)
+    internal async Task<Shift?> GetWorkerShiftById(string id)
     {
         try
         {
@@ -142,6 +148,12 @@ internal class WorkerShiftService
 
             Shift? result = JsonSerializer.Deserialize<Shift>(json, options);
 
+            if (result is null)
+            {
+                AnsiConsole.MarkupLine("[#F0362C]Failed to parse the server response.[/]");
+                return null;
+            }
+
             return result;
         }
         catch (Exception ex)
@@ -151,7 +163,7 @@ internal class WorkerShiftService
         }
     }
 
-    internal async Task<Shift> UpdateWorkerShift(int id, UpdateWorkerShiftDTO dto)
+    internal async Task<Shift?> UpdateWorkerShift(int id, UpdateWorkerShiftDTO dto)
     {
         try
         {
@@ -184,20 +196,26 @@ internal class WorkerShiftService
                 PropertyNameCaseInsensitive = true
             };
 
-            Shift result = JsonSerializer.Deserialize<Shift>(json, options);
+            Shift? result = JsonSerializer.Deserialize<Shift>(json, options);
+
+            if (result is null)
+            {
+                AnsiConsole.MarkupLine("[#F0362C]Failed to parse the server response.[/]");
+                return null;
+            }
 
             return result;
         }
-        catch(Exception ex) 
+        catch (Exception ex)
         {
             HanldeException(ex);
             return null;
         }
     }
 
-    public static void HanldeException(Exception ex) 
+    public static void HanldeException(Exception ex)
     {
-        switch(ex)
+        switch (ex)
         {
             case HttpRequestException:
                 AnsiConsole.MarkupLine($"[#F0362C]Unable to connect to the API. Make sure it is running.[/]");
