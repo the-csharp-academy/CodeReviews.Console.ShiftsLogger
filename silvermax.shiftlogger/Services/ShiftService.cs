@@ -1,6 +1,8 @@
 ﻿using Azure.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using silvermax.shiftlogger.Data;
+using silvermax.shiftlogger.Dtos;
 using silvermax.shiftlogger.Models;
 
 namespace silvermax.shiftlogger.Services;
@@ -22,7 +24,7 @@ public class ShiftService : IShiftService
         return newShift.Entity;
     }
 
-    public async Task<string> DeleteshiftAsync(Guid id, CancellationToken ct)
+    public async Task<string?> DeleteshiftAsync(Guid id, CancellationToken ct)
     {
         var shiftToDelete = await _db.Shifts.FirstOrDefaultAsync(s => s.ShiftId == id, ct);
 
@@ -44,14 +46,18 @@ public class ShiftService : IShiftService
         return shift;
     }
 
-    public async Task<Shift> UpdateShiftAsync(Guid id, Shift updatedShift, CancellationToken ct)
+    public async Task<Shift?> UpdateShiftAsync(Guid id, UpdateShiftDto dto, CancellationToken ct)
     {
+
         var shiftToUpdate = await _db.Shifts.FindAsync(id, ct);
 
         if (shiftToUpdate is null)
             return null;
 
-        _db.Entry(shiftToUpdate).CurrentValues.SetValues(updatedShift);
+        shiftToUpdate.Name = dto.Name;
+        shiftToUpdate.StartTime = dto.StartTime;
+        shiftToUpdate.EndTime = dto.EndTime;
+        
         await _db.SaveChangesAsync(ct);
 
         return shiftToUpdate;

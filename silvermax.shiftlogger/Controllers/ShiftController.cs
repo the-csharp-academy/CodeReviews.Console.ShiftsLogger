@@ -17,16 +17,16 @@ public class ShiftController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Shift>>> GetAllShifts()
+    public async Task<ActionResult<List<Shift>>> GetAllShifts(CancellationToken ct)
     {
-        var shifts = await _service.GetAllShiftsAsync(CancellationToken.None);
+        var shifts = await _service.GetAllShiftsAsync(ct);
         return Ok(shifts);
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<Shift>> GetShiftById(Guid id)
+    public async Task<ActionResult<Shift>> GetShiftById(Guid id, CancellationToken ct)
     {
-        var result = await _service.GetShiftByIdAsync(id, CancellationToken.None);
+        var result = await _service.GetShiftByIdAsync(id, ct);
 
         if (result is null)
             return NotFound();
@@ -35,7 +35,7 @@ public class ShiftController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Shift>> CreateShift(CreateShiftDto dto)
+    public async Task<ActionResult<Shift>> CreateShift(CreateShiftDto dto, CancellationToken ct)
     {
         var shift = new Shift
         {
@@ -44,15 +44,16 @@ public class ShiftController : ControllerBase
             EndTime = dto.EndTime
         };
 
-        var result = await _service.CreateShiftAsync(shift, CancellationToken.None);
+        var result = await _service.CreateShiftAsync(shift, ct);
 
         return CreatedAtAction(nameof(GetShiftById), new { id = result.ShiftId }, result);
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<ActionResult<Shift>> UpdateShift(Guid id, Shift updatedShift)
+    public async Task<ActionResult<Shift>> UpdateShift(Guid id, UpdateShiftDto dto, CancellationToken ct)
     {
-        var result = await _service.UpdateShiftAsync(id, updatedShift, CancellationToken.None);
+
+        var result = await _service.UpdateShiftAsync(id, dto, ct);
 
         if (result is null)
             return NotFound();
@@ -61,9 +62,9 @@ public class ShiftController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<ActionResult<string>> DeleteShift(Guid id)
+    public async Task<ActionResult<string>> DeleteShift(Guid id, CancellationToken ct)
     {
-        var result = await _service.DeleteshiftAsync(id, CancellationToken.None);
+        var result = await _service.DeleteshiftAsync(id, ct);
 
         if (result is null)
             return NotFound();

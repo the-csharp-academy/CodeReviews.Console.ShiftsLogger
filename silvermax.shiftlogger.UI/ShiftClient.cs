@@ -26,8 +26,7 @@ internal class ShiftClient
         var response = await _httpClient.DeleteAsync($"api/shift/{id}");
         response.EnsureSuccessStatusCode();
 
-        return await response.Content.ReadAsStringAsync()
-            ?? throw new InvalidOperationException("Failed to delete shift");
+        return await response.Content.ReadAsStringAsync();
     }
 
     public async Task<Shift> UpdateShift(Guid id, Shift updatedShift)

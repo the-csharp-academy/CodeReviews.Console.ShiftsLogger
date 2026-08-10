@@ -9,6 +9,7 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient<ShiftClient>(c => c.BaseAddress =
             new Uri("https://localhost:7203/"));
         services.AddTransient<ShiftManager>();
+        services.AddTransient<UserInterface>();
 
         return services.BuildServiceProvider();
     }

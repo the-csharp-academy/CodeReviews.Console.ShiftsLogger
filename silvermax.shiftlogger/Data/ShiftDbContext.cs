@@ -21,12 +21,7 @@ public class ShiftDbContext : DbContext
             entity.Property(e => e.ShiftId)
                 .HasDefaultValueSql("NEWSEQUENTIALID()")
                 .ValueGeneratedOnAdd();
-            entity.Property(e => e.Duration)
-                .HasConversion(
-                    v => (long)v.TotalSeconds,
-                    v => TimeSpan.FromSeconds(v))
-                .HasColumnType("bigint")
-                .HasComputedColumnSql("DATEDIFF_BIG(SECOND, StartTime, EndTime)", stored: true);
+            entity.Property(e => e.Name).HasMaxLength(100);
         });
     }
 }
