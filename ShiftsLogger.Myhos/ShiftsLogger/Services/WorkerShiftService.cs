@@ -69,7 +69,7 @@ public class WorkerShiftService : IWorkerShiftService
 
     public Shift? GetWorkerShitftById(int id)
     {
-        Shift workerShift = _contextDB.WorkerShifts.Find(id);
+        Shift? workerShift = _contextDB.WorkerShifts.Find(id);
 
         if (workerShift == null) 
         {
@@ -83,7 +83,7 @@ public class WorkerShiftService : IWorkerShiftService
         return workerShift;
     }
 
-    public Shift UpdateWorkerShift(int id, UpdateWorkerShiftDto dto)
+    public Shift? UpdateWorkerShift(int id, UpdateWorkerShiftDto dto)
     {
         Shift? workerShift = _contextDB.WorkerShifts.Find(id);
 
