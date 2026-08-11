@@ -1,7 +1,6 @@
-﻿namespace ShiftsLogger.UI.DTOs
+﻿namespace ShiftsLogger.UI.DTOs;
+
+public class WorkerDTO
 {
-    public class WorkerDTO
-    {
-        public string Name { get; set; } = string.Empty;
-    }
+    public string Name { get; set; } = string.Empty;
 }

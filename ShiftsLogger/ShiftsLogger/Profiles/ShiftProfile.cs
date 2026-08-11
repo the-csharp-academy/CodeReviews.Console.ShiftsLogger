@@ -2,15 +2,14 @@ using AutoMapper;
 using ShiftsLogger.DTOs;
 using ShiftsLogger.Models;
 
-namespace ShiftsLogger.Profiles
+namespace ShiftsLogger.Profiles;
+
+public class ShiftProfile : Profile
 {
-    public class ShiftProfile : Profile
+    public ShiftProfile()
     {
-        public ShiftProfile()
-        {
-            CreateMap<Shift, ShiftCreateDTO>();
-            CreateMap<ShiftCreateDTO, Shift>();
-            CreateMap<Shift, ShiftReadDTO>();
-        }
+        CreateMap<Shift, ShiftCreateDTO>();
+        CreateMap<ShiftCreateDTO, Shift>();
+        CreateMap<Shift, ShiftReadDTO>();
     }
 }

@@ -2,135 +2,134 @@ using ShiftsLogger.UI.DTOs;
 using System;
 using System.Net.Http.Json;
 
-namespace ShiftsLogger.UI.Services
+namespace ShiftsLogger.UI.Services;
+
+public class ShiftApiService
 {
-    public class ShiftApiService
+    private readonly HttpClient _httpClient;
+    private readonly string _urlBase;
+
+    public ShiftApiService(HttpClient httpClient, string urlBase)
     {
-        private readonly HttpClient _httpClient;
-        private readonly string _urlBase;
+        _httpClient = httpClient;
+        _urlBase = urlBase;
+    }
 
-        public ShiftApiService(HttpClient httpClient, string urlBase)
+    public async Task<List<ShiftReadDTO>?> GetAllShiftsAsync()
+    {
+        try
         {
-            _httpClient = httpClient;
-            _urlBase = urlBase;
+            var response = await _httpClient.GetAsync(_urlBase + "/api/shifts");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<ShiftReadDTO>>();
         }
-
-        public async Task<List<ShiftReadDTO>?> GetAllShiftsAsync()
+        catch (HttpRequestException ex)
         {
-            try
-            {
-                var response = await _httpClient.GetAsync(_urlBase + "/api/shifts");
-                response.EnsureSuccessStatusCode();
-                return await response.Content.ReadFromJsonAsync<List<ShiftReadDTO>>();
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"API error: {ex.Message}");
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-                return null;
-            }
+            Console.WriteLine($"API error: {ex.Message}");
+            return null;
         }
-
-        public async Task<ShiftReadDTO?> GetShiftByIdAsync(int id)
+        catch (Exception ex)
         {
-            try
-            {
-                var response = await _httpClient.GetAsync(_urlBase + $"/api/shifts/{id}");
-                response.EnsureSuccessStatusCode();
-                return await response.Content.ReadFromJsonAsync<ShiftReadDTO>();
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"API error: {ex.Message}");
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-                return null;
-            }
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+            return null;
         }
+    }
 
-        public async Task<List<ShiftReadDTO>?> GetShiftsByWorkerAsync(int id)
+    public async Task<ShiftReadDTO?> GetShiftByIdAsync(int id)
+    {
+        try
         {
-            try
-            {
-                var response = await _httpClient.GetAsync(_urlBase + $"/api/workers/{id}/shifts");
-                response.EnsureSuccessStatusCode();
-                return await response.Content.ReadFromJsonAsync<List<ShiftReadDTO>>();
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"API error: {ex.Message}");
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-                return null;
-            }
+            var response = await _httpClient.GetAsync(_urlBase + $"/api/shifts/{id}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<ShiftReadDTO>();
         }
-
-        public async Task<ShiftReadDTO?> CreateShiftAsync(ShiftCreateDTO shift)
+        catch (HttpRequestException ex)
         {
-            try
-            {
-                var response = await _httpClient.PostAsJsonAsync(_urlBase + "/api/shifts", shift);
-                response.EnsureSuccessStatusCode();
-                return await response.Content.ReadFromJsonAsync<ShiftReadDTO>();
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"API error: {ex.Message}");
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-                return null;
-            }
+            Console.WriteLine($"API error: {ex.Message}");
+            return null;
         }
-
-        public async Task<bool> UpdateShiftAsync(int id, ShiftCreateDTO shift)
+        catch (Exception ex)
         {
-            try
-            {
-                var response = await _httpClient.PutAsJsonAsync(_urlBase + $"/api/shifts/{id}", shift);
-                return response.IsSuccessStatusCode;
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"API error: {ex.Message}");
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-                return false;
-            }
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+            return null;
         }
+    }
 
-        public async Task<bool> DeleteShiftAsync(int id)
+    public async Task<List<ShiftReadDTO>?> GetShiftsByWorkerAsync(int id)
+    {
+        try
         {
-            try
-            {
-                var response = await _httpClient.DeleteAsync(_urlBase + $"/api/shifts/{id}");
-                return response.IsSuccessStatusCode;
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"API error: {ex.Message}");
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-                return false;
-            }
+            var response = await _httpClient.GetAsync(_urlBase + $"/api/workers/{id}/shifts");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<ShiftReadDTO>>();
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"API error: {ex.Message}");
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+            return null;
+        }
+    }
+
+    public async Task<ShiftReadDTO?> CreateShiftAsync(ShiftCreateDTO shift)
+    {
+        try
+        {
+            var response = await _httpClient.PostAsJsonAsync(_urlBase + "/api/shifts", shift);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<ShiftReadDTO>();
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"API error: {ex.Message}");
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+            return null;
+        }
+    }
+
+    public async Task<bool> UpdateShiftAsync(int id, ShiftCreateDTO shift)
+    {
+        try
+        {
+            var response = await _httpClient.PutAsJsonAsync(_urlBase + $"/api/shifts/{id}", shift);
+            return response.IsSuccessStatusCode;
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"API error: {ex.Message}");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteShiftAsync(int id)
+    {
+        try
+        {
+            var response = await _httpClient.DeleteAsync(_urlBase + $"/api/shifts/{id}");
+            return response.IsSuccessStatusCode;
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"API error: {ex.Message}");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+            return false;
         }
     }
 }

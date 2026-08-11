@@ -1,9 +1,8 @@
-namespace ShiftsLogger.DTOs
+namespace ShiftsLogger.DTOs;
+
+public class ShiftCreateDTO
 {
-    public class ShiftCreateDTO
-    {
-        public int WorkerId { get; set; }
-        public DateTime ShiftStart { get; set; }
-        public DateTime ShiftEnd { get; set; }
-    }
+    public int WorkerId { get; set; }
+    public DateTime ShiftStart { get; set; }
+    public DateTime ShiftEnd { get; set; }
 }

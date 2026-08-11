@@ -2,92 +2,91 @@ using Microsoft.AspNetCore.Mvc;
 using ShiftsLogger.Services;
 using ShiftsLogger.DTOs;
 
-namespace ShiftsLogger.Controllers
+namespace ShiftsLogger.Controllers;
+
+[ApiController]
+[Route("api/workers")]
+public class WorkerController : ControllerBase
 {
-    [ApiController]
-    [Route("api/workers")]
-    public class WorkerController : ControllerBase
+    private readonly IWorkerService _workerService;
+    private readonly IShiftService _shiftService;
+
+    public WorkerController(IWorkerService workerService, IShiftService shiftService)
     {
-        private readonly IWorkerService _workerService;
-        private readonly IShiftService _shiftService;
+        _workerService = workerService;
+        _shiftService = shiftService;
+    }
 
-        public WorkerController(IWorkerService workerService, IShiftService shiftService)
+    [HttpGet]
+    public async Task<IActionResult> GetAllWorkersAsync()
+    {
+        var result = await _workerService.GetAllWorkersAsync();
+
+        if (result == null)
         {
-            _workerService = workerService;
-            _shiftService = shiftService;
+            return NotFound();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllWorkersAsync()
-        {
-            var result = await _workerService.GetAllWorkersAsync();
-            
-            if (result == null)
-            {
-                return NotFound();
-            }
+        return Ok(result);
+    }
 
-            return Ok(result);
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetWorkerAsync(int id)
+    {
+        var result = await _workerService.GetWorkerByIdAsync(id);
+
+        if (result == null)
+        {
+            return NotFound();
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetWorkerAsync(int id)
+        return Ok(result);
+    }
+
+    [HttpGet("{workerId}/shifts")]
+    public async Task<IActionResult> GetAllShiftsByWorkerAsync(int workerId)
+    {
+        var result = await _shiftService.GetAllShiftsByWorkerAsync(workerId);
+
+        return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateWorkerAsync(WorkerDTO dto)
+    {
+        var result = await _workerService.CreateWorkerAsync(dto);
+
+        if (result == null)
         {
-            var result = await _workerService.GetWorkerByIdAsync(id);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
+            return BadRequest();
         }
 
-        [HttpGet("{workerId}/shifts")]
-        public async Task<IActionResult> GetAllShiftsByWorkerAsync(int workerId)
-        {
-            var result = await _shiftService.GetAllShiftsByWorkerAsync(workerId);
+        return CreatedAtAction("GetWorker", new { id = result.Id }, result);
+    }
 
-            return Ok(result);
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateWorkerAsync(int id, WorkerDTO dto)
+    {
+        var result = await _workerService.UpdateWorkerAsync(id, dto);
+
+        if (result == null)
+        {
+            return NotFound();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateWorkerAsync(WorkerDTO dto)
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteWorkerAsync(int id)
+    {
+        var result = await _workerService.DeleteWorkerAsync(id);
+
+        if (!result)
         {
-            var result = await _workerService.CreateWorkerAsync(dto);
-
-            if (result == null)
-            {
-                return BadRequest();
-            }
-
-            return CreatedAtAction("GetWorker", new { id = result.Id }, result);
+            return NotFound();
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateWorkerAsync(int id, WorkerDTO dto)
-        {
-            var result = await _workerService.UpdateWorkerAsync(id, dto);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteWorkerAsync(int id)
-        {
-            var result = await _workerService.DeleteWorkerAsync(id);
-
-            if (!result)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
-        }
+        return NoContent();
     }
 }

@@ -2,15 +2,14 @@ using AutoMapper;
 using ShiftsLogger.DTOs;
 using ShiftsLogger.Models;
 
-namespace ShiftsLogger.Profiles
+namespace ShiftsLogger.Profiles;
+
+public class WorkerProfile : Profile
 {
-    public class WorkerProfile : Profile
+    public WorkerProfile()
     {
-        public WorkerProfile()
-        {
-            CreateMap<Worker, WorkerDTO>();
-            CreateMap<WorkerDTO, Worker>();
-            CreateMap<Worker, WorkerReadDTO>();
-        }
+        CreateMap<Worker, WorkerDTO>();
+        CreateMap<WorkerDTO, Worker>();
+        CreateMap<Worker, WorkerReadDTO>();
     }
 }

@@ -1,8 +1,7 @@
-﻿namespace ShiftsLogger.DTOs
+﻿namespace ShiftsLogger.DTOs;
+
+public class WorkerReadDTO
 {
-    public class WorkerReadDTO
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-    }
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

@@ -8,7 +8,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ShiftsLoggerContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
+builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(Program).Assembly));
 builder.Services.AddScoped<IShiftService, ShiftService>();
 builder.Services.AddScoped<IWorkerService, WorkerService>();
 
