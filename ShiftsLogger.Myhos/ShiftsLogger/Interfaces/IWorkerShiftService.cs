@@ -9,5 +9,5 @@ public interface IWorkerShiftService
     public Shift? GetWorkerShitftById(int id);
     public Shift? UpdateWorkerShift(int id,UpdateWorkerShiftDto dto);
     public Shift CreateWorkerShift(CreatedWorkerShiftDTO dto);
-    public bool DeleteWorkerShift(int id); 
+    public void DeleteWorkerShift(int id); 
 }

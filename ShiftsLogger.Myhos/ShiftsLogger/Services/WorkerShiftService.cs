@@ -1,5 +1,6 @@
 ﻿using ShiftsLogger.Data;
 using ShiftsLogger.DTOs;
+using ShiftsLogger.Exceptions;
 using ShiftsLogger.Interfaces;
 using ShiftsLogger.Model;
 
@@ -18,6 +19,9 @@ public class WorkerShiftService : IWorkerShiftService
 
     public Shift CreateWorkerShift(CreatedWorkerShiftDTO dto)
     {
+        if (dto.StartTime == dto.EndTime)
+            throw new ValidationException("Star time and End time cannot be the same");
+
         Shift workerShift = new()
         {
             WorkerName = dto.WorkerName,
@@ -39,23 +43,20 @@ public class WorkerShiftService : IWorkerShiftService
         return workerShift;
     }
 
-    public bool DeleteWorkerShift(int id)
+    public void DeleteWorkerShift(int id)
     {
         Shift? workerShift = _contextDB.WorkerShifts.Find(id);
 
         if(workerShift == null) 
         {
             _logger.LogWarning("Worker shift {Id} not found.", id);
-
-            return false;
+            throw new NotFoundException($"Worker shift with id {id} was not found.");
         }
 
         _contextDB.WorkerShifts.Remove(workerShift);
         _contextDB.SaveChanges();
 
         _logger.LogInformation("Worker shift {Id} deleted.",id);
-
-        return true;
     }
 
     public List<Shift> GetWorkerShifts()
@@ -74,8 +75,7 @@ public class WorkerShiftService : IWorkerShiftService
         if (workerShift == null) 
         {
             _logger.LogWarning("Worker shift with Id {Id} was not found.", id);
-
-            return null;
+            throw new NotFoundException($"Worker shift with id {id} was not found.");
         }
 
         _logger.LogInformation("Worker shift with Id {Id} retrieved.",id);
@@ -90,8 +90,7 @@ public class WorkerShiftService : IWorkerShiftService
         if (workerShift == null) 
         {
             _logger.LogWarning("Worker shift {Id} not found", id);
-
-            return null;
+            throw new NotFoundException($"Worker shift  with id {id} was not found.");
         }
 
         if (dto.WorkerName != null)
