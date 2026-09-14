@@ -15,8 +15,13 @@ builder.Services.AddScoped<IShiftService, ShiftService>();
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+// Swagger publishes the whole API surface, so it must not be reachable on a production host.
+// `dotnet run` still gets it: Properties/launchSettings.json sets ASPNETCORE_ENVIRONMENT=Development.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.MapControllers();
 
