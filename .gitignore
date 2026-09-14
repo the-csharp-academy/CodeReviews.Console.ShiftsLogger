@@ -478,3 +478,11 @@ $RECYCLE.BIN/
 
 # Rider
 .idea/
+
+# ShiftsLogger local database
+*.db
+*.db-shm
+*.db-wal
+
+# Hermes local planning artifacts
+.hermes/
