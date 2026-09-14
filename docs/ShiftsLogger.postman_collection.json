@@ -1,0 +1,119 @@
+{
+  "info": {
+    "name": "ShiftsLogger",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5273" },
+    { "key": "shiftId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Create shift (201)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/shifts",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"workerName\": \"Ana\",\n  \"startTime\": \"2026-09-14T08:00:00\",\n  \"endTime\": \"2026-09-14T16:30:00\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('201 Created', () => pm.response.to.have.status(201));",
+              "const body = pm.response.json();",
+              "pm.test('has an id', () => pm.expect(body.id).to.be.a('number'));",
+              "pm.collectionVariables.set('shiftId', body.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create shift with bad range (400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/shifts",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"workerName\": \"Ana\",\n  \"startTime\": \"2026-09-14T16:00:00\",\n  \"endTime\": \"2026-09-14T08:00:00\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('400 Bad Request', () => pm.response.to.have.status(400));",
+              "pm.test('explains why', () => pm.expect(pm.response.json().error).to.eql('End time must be after the start time.'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "List shifts (200)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/shifts" },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200 OK', () => pm.response.to.have.status(200));",
+              "pm.test('is an array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get shift by id (200)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/shifts/{{shiftId}}" },
+      "event": [
+        { "listen": "test", "script": { "exec": ["pm.test('200 OK', () => pm.response.to.have.status(200));"] } }
+      ]
+    },
+    {
+      "name": "Get missing shift (404)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/shifts/999999" },
+      "event": [
+        { "listen": "test", "script": { "exec": ["pm.test('404 Not Found', () => pm.response.to.have.status(404));"] } }
+      ]
+    },
+    {
+      "name": "Update shift (200)",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/shifts/{{shiftId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"workerName\": \"Ana\",\n  \"startTime\": \"2026-09-14T09:00:00\",\n  \"endTime\": \"2026-09-14T17:00:00\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200 OK', () => pm.response.to.have.status(200));",
+              "pm.test('end time changed', () => pm.expect(pm.response.json().endTime).to.include('17:00:00'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete shift (204)",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/api/shifts/{{shiftId}}" },
+      "event": [
+        { "listen": "test", "script": { "exec": ["pm.test('204 No Content', () => pm.response.to.have.status(204));"] } }
+      ]
+    }
+  ]
+}
