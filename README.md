@@ -1,5 +1,7 @@
 # ShiftsLogger
 
+![CI](https://github.com/DeanoAbr/ShiftsLogger/actions/workflows/ci.yml/badge.svg)
+
 A worker shift tracker built as two applications: an ASP.NET Core Web API backed by
 Entity Framework Core (code-first, SQLite) and a console app that consumes it over HTTP.
 
@@ -9,7 +11,7 @@ Entity Framework Core (code-first, SQLite) and a console app that consumes it ov
 - Entity Framework Core 10 + SQLite, schema created by migrations
 - Swagger UI (Swashbuckle) for endpoint docs, Postman collection for stored tests
 - Console front end (`ShiftsLogger.UI`) — `HttpClient` + `System.Text.Json`
-- xunit test suite (`ShiftsLogger.Tests`)
+- xunit test suite (`ShiftsLogger.Tests`) — 58 tests
 
 ## Requirements traceability
 
@@ -28,7 +30,7 @@ Entity Framework Core (code-first, SQLite) and a console app that consumes it ov
 # 1. Terminal A — API (schema is created by migrations; run once first)
 cd ShiftsLogger.Api
 dotnet ef database update
-dotnet run                       # http://localhost:5273, Swagger at /swagger
+dotnet run                       # http://localhost:5273, Swagger at /swagger (Development only)
 
 # 2. Terminal B — console UI
 cd ShiftsLogger.UI
@@ -47,9 +49,20 @@ SHIFTSLOGGER_API_URL=http://localhost:6000 dotnet run
 dotnet test
 ```
 
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on every push and pull request: restore, Release build, then the
+full xunit suite on `ubuntu-latest` with .NET SDK 10.0.401.
+
+Swagger is registered in the Development environment only, so a production host does not publish the
+API's documentation and schemas. `dotnet run` picks the `http` launch profile, which sets
+`ASPNETCORE_ENVIRONMENT=Development`, so Swagger is available locally as usual; force another
+environment with `ASPNETCORE_ENVIRONMENT=Production dotnet run --no-launch-profile` and `/swagger`
+returns 404.
+
 ## Manual testing
 
-- Swagger UI: `http://localhost:5273/swagger`
+- Swagger UI: `http://localhost:5273/swagger` (Development environment only)
 - Postman: import `docs/ShiftsLogger.postman_collection.json`, run the collection with the API up
   (7 requests, 11 assertions). Headless alternative: `npx newman run docs/ShiftsLogger.postman_collection.json`
 
