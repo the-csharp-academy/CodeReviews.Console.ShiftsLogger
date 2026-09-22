@@ -34,6 +34,9 @@ public class CreateShiftHandler
         if (command.ClockInTime >= command.ClockOutTime)
             return Result.Failure(Errors.ClockInTimePrecedesClockOutTime);
 
+        if (command.ClockInTime >= DateTime.Now || command.ClockOutTime > DateTime.Now)
+            return Result.Failure(Errors.CannotLogFutureShifts);
+
         var overlapResult = await _shiftsRepository.OverlapsExistingShiftAsync(newShift);
         if (overlapResult.Value)
             return Result.Failure(Errors.NewShiftOverlapsExistingShift);

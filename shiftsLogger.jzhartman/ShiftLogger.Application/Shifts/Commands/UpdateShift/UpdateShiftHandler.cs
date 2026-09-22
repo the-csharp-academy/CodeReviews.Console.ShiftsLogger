@@ -41,6 +41,9 @@ public class UpdateShiftHandler
         if (updatedShift.ClockInTime >= updatedShift.ClockOutTime)
             return Result.Failure(Errors.ClockInTimePrecedesClockOutTime);
 
+        if (updatedShift.ClockInTime >= DateTime.Now || updatedShift.ClockOutTime > DateTime.Now)
+            return Result.Failure(Errors.CannotLogFutureShifts);
+
         var overlapsResult = await _shiftsRepository.OverlapsExistingShiftsExcludingCurrentAsync(updatedShift);
         if (overlapsResult.Value)
             return Result.Failure(Errors.NewShiftOverlapsExistingShift);

@@ -23,6 +23,7 @@ public static class Errors
     public static readonly Error DateRangeError = new("SL40907", "The end date cannot precede the start date.");
     public static readonly Error ClockInTimePrecedesClockOutTime = new("SL40908", "The Clock In time cannot be on or after the Clock Out time.");
     public static readonly Error NewShiftOverlapsExistingShift = new("SL40909", "This shift cannot overlap an existing shift.");
+    public static readonly Error CannotLogFutureShifts = new("SL40910", "A shift cannot be entered with a time greater than the current time.");
 
 
     // Unknown Errors

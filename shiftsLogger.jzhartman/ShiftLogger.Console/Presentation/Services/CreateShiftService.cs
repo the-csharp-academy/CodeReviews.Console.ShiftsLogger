@@ -32,7 +32,7 @@ internal class CreateShiftService
             var confirmAdd = UserInput.GetConfirmation($"Add the following shift to work log for [DeepSkyBlue1]{employee.FirstName} {employee.LastName}[/]:" +
                 $"\r\n\tClock-in Time:\t[green]{startTime}[/]" +
                 $"\r\n\tClock-Out Time:\t[green]{endTime}[/]" +
-                $"\r\n\tDuration:\t[green]{(endTime - startTime).ToString(@"hh\:mm\:ss")}[/]" +
+                $"\r\n\tDuration:\t[green]{Messages.GenerateDurationString(startTime, endTime)}[/]" +
                 $"\r\n\r\nConfirm add::");
 
             Messages.PrintBlankLines(1);

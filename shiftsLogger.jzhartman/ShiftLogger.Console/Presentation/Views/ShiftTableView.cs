@@ -1,4 +1,5 @@
 ﻿using ShiftLogger.Application.Shifts.Dtos;
+using ShiftLogger.Console.Presentation.Output;
 using Spectre.Console;
 
 namespace ShiftLogger.Console.Presentation.Views;
@@ -29,7 +30,7 @@ internal class ShiftTableView
                     shift.ClockInTime.ToString("HH:mm:ss"),
                     shift.ClockOutTime.ToString("yyyy-MM-dd"),
                     shift.ClockOutTime.ToString("HH:mm:ss"),
-                    $"{TimeSpan.FromSeconds((shift.ClockOutTime - shift.ClockInTime).TotalSeconds)}");
+                    $"{Messages.GenerateDurationString(shift.ClockInTime, shift.ClockOutTime)}");
 
                 id++;
             }

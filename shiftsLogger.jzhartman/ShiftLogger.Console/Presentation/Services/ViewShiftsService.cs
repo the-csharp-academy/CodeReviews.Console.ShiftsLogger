@@ -124,7 +124,7 @@ internal class ViewShiftsService
     {
         var duration = TimeSpan.FromSeconds(durationSeconds);
 
-        AnsiConsole.MarkupLine($"[DeepSkyBlue1]Total Duration for Range[/]: [green]" +
+        AnsiConsole.MarkupLine($"[DeepSkyBlue1]Total Duration for Range (HH:mm:ss)[/]: [green]" +
             $"{(int)Math.Floor(duration.TotalHours):D2}:{duration.Minutes:D2}:{duration.Seconds:D2}[/]");
     }
 }

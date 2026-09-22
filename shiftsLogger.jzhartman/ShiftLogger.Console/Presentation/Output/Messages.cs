@@ -42,4 +42,9 @@ internal static class Messages
             AnsiConsole.WriteLine();
         }
     }
+    public static string GenerateDurationString(DateTime startTime, DateTime endTime)
+    {
+        var duration = TimeSpan.FromSeconds((endTime - startTime).TotalSeconds);
+        return $"{(int)Math.Floor(duration.TotalHours):D2}:{duration.Minutes:D2}:{duration.Seconds:D2}";
+    }
 }

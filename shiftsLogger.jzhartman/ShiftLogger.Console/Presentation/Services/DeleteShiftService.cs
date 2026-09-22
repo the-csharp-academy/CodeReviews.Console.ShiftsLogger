@@ -29,7 +29,7 @@ internal class DeleteShiftService
             var confirmDelete = UserInput.GetConfirmation($"The following shift will be deleted:" +
                             $"\r\n\tClock-In Time:\t[green]{shift.ClockInTime.ToString("yyyy-MM-dd HH:mm:ss")}[/]" +
                             $"\r\n\tClock-Out Time:\t[green]{shift.ClockOutTime.ToString("yyyy-MM-dd HH:mm:ss")}[/]" +
-                            $"\r\n\tDuration:\t[green]{(shift.ClockOutTime - shift.ClockInTime).ToString(@"hh\:mm\:ss")}[/]" +
+                            $"\r\n\tDuration:\t[green]{Messages.GenerateDurationString(shift.ClockInTime, shift.ClockOutTime)}[/]" +
                             $"\r\n\r\nConfirm changes:");
             Messages.PrintBlankLines(1);
 

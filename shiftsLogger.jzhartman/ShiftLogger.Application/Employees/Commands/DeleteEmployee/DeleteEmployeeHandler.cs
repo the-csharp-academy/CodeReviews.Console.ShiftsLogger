@@ -44,7 +44,7 @@ public class DeleteEmployeeHandler
         if (shiftCountResult.Value > 0)
         {
             var deleteShiftsResult = await _shiftRepository.DeleteAllShiftsByEmployeeIdAsync(command.Id);
-            if (!deleteShiftsResult.IsFailure)
+            if (deleteShiftsResult.IsFailure)
                 return Result.Failure(deleteShiftsResult.Errors);
         }
 
