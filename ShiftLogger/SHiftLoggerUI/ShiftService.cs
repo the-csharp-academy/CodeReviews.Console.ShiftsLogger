@@ -20,7 +20,7 @@ static class ShiftService
 
             foreach (var shift in shifts)
             {
-                Console.WriteLine($"Worker - ID: {shift.Id}, Worker ID: {shift.WorkerId}, Hours: {shift.StartTime} - {shift.EndTime}");
+                Console.WriteLine($"Worker - ID: {shift.Id}, Worker ID: {shift.WorkerId}, Hours: {shift.StartTime} - {shift.EndTime}, Duration: {shift.Duration()}");
             }
         }
         catch (Exception e)
@@ -31,11 +31,17 @@ static class ShiftService
 
     public static async Task GetShift()
     {
-        int id = UserInput.GetId("Please insert the ID of the shift you want to get: ");
         try
         {
+            int id = await GetExistingShiftId("Please insert the ID of the shift you want to get: ");
+            if (id == 0)
+            {
+                Console.WriteLine("Operation cancelled.");
+                return;
+            }
+            
             var shift = await client.GetFromJsonAsync<Shift>($"http://localhost:5011/api/Shifts/{id}");
-            Console.WriteLine($"Id: {shift!.Id}, Name: {shift.WorkerId}, Hours: {shift.StartTime} - {shift.EndTime}");
+            Console.WriteLine($"Id: {shift!.Id}, worker ID: {shift.WorkerId}, Hours: {shift.StartTime} - {shift.EndTime}, Duration: {shift.Duration()}");
         }
         catch (Exception e)
         {
@@ -45,14 +51,17 @@ static class ShiftService
 
     public static async Task AddShift()
     {
-        int workerId = UserInput.GetId("Please insert the ID of the worker: ");
-
-        DateTime start = UserInput.GetDateTime("Please enter the date and time of the shift start - format [dd-MM-yyyy] - [hh:mm:ss] ");
-        DateTime end = UserInput.GetDateTime("Please enter the date and time of the shift end - format [dd-MM-yyyy] - [hh:mm:ss] ");
-
-        Shift shift = new Shift { StartTime = start, EndTime = end, WorkerId = workerId };
         try
         {
+            int workerId = await WorkerService.GetExistingWorkerId("Please insert the ID of the worker you want to add a shift for: ");
+            if (workerId == 0)
+            {
+                Console.WriteLine("Operation cancelled.");
+                return;
+            }
+            (DateTime start, DateTime end) = UserInput.GetDateTimes("Please enter the date and time of the shift start - format [dd-MM-yyyy] - [HH:mm:ss] ");
+
+            Shift shift = new Shift { StartTime = start, EndTime = end, WorkerId = workerId };
             var response = await client.PostAsJsonAsync<Shift>("http://localhost:5011/api/Shifts", shift);
 
             if (response.StatusCode == System.Net.HttpStatusCode.Created)
@@ -61,7 +70,7 @@ static class ShiftService
 
                 var newShift = await response.Content.ReadFromJsonAsync<Shift>();
 
-                Console.WriteLine($"Id: {newShift!.Id}, Name: {newShift.WorkerId}, Hours: {newShift.StartTime} - {newShift.EndTime}");
+                Console.WriteLine($"Id: {newShift!.Id}, Worker ID: {newShift.WorkerId}, Hours: {newShift.StartTime} - {newShift.EndTime}, Duration: {newShift.Duration()}");
             }
             else
             {
@@ -77,19 +86,22 @@ static class ShiftService
 
     public static async Task EditShift()
     {
-        await GetShifts();
-
-        int id = UserInput.GetId("Insert ID of the shift you want to edit: ");
-
         try
         {
+            await GetShifts();
+
+            int id = await GetExistingShiftId("Please insert the ID of the shift you want to edit: ");
+            if (id == 0)
+            {
+                Console.WriteLine("Operation cancelled.");
+                return;
+            }
+
             var existingShift = await client.GetFromJsonAsync<Shift>($"http://localhost:5011/api/Shifts/{id}");
 
-            Console.WriteLine($"You are now modifying shift ID {existingShift!.Id}: WORKER: {existingShift.WorkerId}, {existingShift.StartTime} - {existingShift.EndTime} ");
+            Console.WriteLine($"You are now modifying shift ID {existingShift!.Id}: WORKER: {existingShift.WorkerId}, {existingShift.StartTime} - {existingShift.EndTime}, Duration: {existingShift.Duration()}");
 
-            DateTime start = UserInput.GetDateTime("Insert new starting time: ");
-
-            DateTime end = UserInput.GetDateTime("Insert new ending time: ");
+            (DateTime start, DateTime end) = UserInput.GetDateTimes("Insert new starting time - format [dd-MM-yyyy] - [HH:mm:ss] ");
 
             Shift shift = new Shift { Id = id, StartTime = start, EndTime = end, WorkerId = existingShift.WorkerId };
 
@@ -112,12 +124,17 @@ static class ShiftService
 
     public static async Task DeleteShift()
     {
-        await GetShifts();
-
-        int id = UserInput.GetId("Select shift to delete: ");
-
         try
         {
+            await GetShifts();
+
+            int id = await GetExistingShiftId("Please insert the ID of the shift you want to delete: ");
+            if (id == 0)
+            {
+                Console.WriteLine("Operation cancelled.");
+                return;
+            }
+
             var response = await client.DeleteAsync($"http://localhost:5011/api/Shifts/{id}");
 
             if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
@@ -133,5 +150,28 @@ static class ShiftService
         {
             Console.WriteLine($"Error: {e.Message}");
         }
+    }
+
+    public static async Task<int> GetExistingShiftId(string message)
+    {
+        while (true)
+        {
+            int id = UserInput.GetId(message);
+            if(id == 0)
+            {
+                return 0;
+            }
+
+            if (await ShiftExists(id))
+            {
+                return id;
+            }
+            Console.WriteLine("Shift with this ID does not exist. Please try again.");
+        }
+    }
+    public static async Task<bool> ShiftExists(int id)
+    {
+        var response = await client.GetAsync($"http://localhost:5011/api/Shifts/{id}");
+        return response.IsSuccessStatusCode;
     }
 }

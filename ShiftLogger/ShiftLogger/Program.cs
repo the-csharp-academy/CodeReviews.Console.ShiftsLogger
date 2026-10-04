@@ -13,6 +13,8 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 
 builder.Services.AddDbContext<ShiftLoggerContext>(Options => Options.UseSqlServer(connectionString));
 
+builder.Services.AddScoped<ShiftService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

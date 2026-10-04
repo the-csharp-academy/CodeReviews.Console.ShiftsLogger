@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ShiftLogger;
 
@@ -7,28 +6,24 @@ namespace ShiftLogger;
 [Route("api/[controller]")]
 public class WorkersController : ControllerBase
 {
-    private readonly ShiftLoggerContext _context;
-
     private readonly ShiftService _service;
 
-    public WorkersController(ShiftLoggerContext context)
+    public WorkersController(ShiftService service)
     {
-        _context = context;
-
-        _service = new ShiftService(_context);
+        _service = service;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<Worker>>> GetWorkers()
     {
-        return await _context.Workers.ToListAsync();
+        var workers = await _service.WorkersList();
+        return workers;
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Worker>> GetWorker(int id)
     {
-        var worker = await _context.Workers
-            .FirstOrDefaultAsync(w => w.Id == id);
+        var worker = await _service.GetWorker(id);
 
         if (worker == null)
         {
@@ -41,11 +36,9 @@ public class WorkersController : ControllerBase
     [HttpGet("{id}/Shifts")]
     public async Task<ActionResult<List<Shift>>> GetWorkerShifts(int id)
     {
-        var shifts = await _context.Shifts
-            .Where(s => s.WorkerId == id)
-            .ToListAsync();
+        var shifts = await _service.GetWorkerShifts(id);
 
-        if (shifts == null || shifts.Count == 0)
+        if (shifts == null)
         {
             return NotFound();
         }
@@ -56,8 +49,7 @@ public class WorkersController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Worker>> PostWorker(Worker worker)
     {
-        _context.Workers.Add(worker);
-        await _context.SaveChangesAsync();
+        await _service.PostWorker(worker);
 
         return CreatedAtAction(nameof(GetWorker), new { id = worker.Id }, worker);
     }
@@ -75,8 +67,7 @@ public class WorkersController : ControllerBase
         if (!workerExists)
             return BadRequest();
 
-        _context.Entry(worker).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+        await _service.PutWorker(worker);
 
         return NoContent();
     }
@@ -84,14 +75,11 @@ public class WorkersController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteWorker(int id)
     {
-        var worker = await _context.Workers.FindAsync(id);
-        if (worker == null)
+        bool deleted = await _service.DeleteWorker(id);
+        if (!deleted)
         {
             return NotFound();
         }
-
-        _context.Workers.Remove(worker);
-        await _context.SaveChangesAsync();
 
         return NoContent();
     }

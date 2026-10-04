@@ -8,5 +8,5 @@ public class Shift
     public DateTime EndTime { get; set; }
 
     public int WorkerId { get; set; }
-    public Worker? Worker { get; set; } = null!; 
+    public Worker? Worker { get; set; }
 }
