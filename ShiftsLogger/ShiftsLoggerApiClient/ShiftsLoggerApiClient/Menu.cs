@@ -8,6 +8,9 @@ namespace ShiftsLoggerApiClient
         private readonly ApiConnection apiConnection = new ApiConnection();
         private readonly CultureInfo culture = CultureInfo.InvariantCulture;
 
+        private readonly string[] dateFormats = { "H:m d-M-yyyy", "H:m d:M:yyyy", "H-m d-M-yyyy", "H.m d.M.yyyy", "H,m d,M,yyyy", "H-m d:M:yyyy", "H/m d/M/yyyy", "H:m d/M/yyyy",
+        "H-m d/M/yyyy", "H:m"};
+
         public async Task MainMenu()
         {
             bool isRunning = true;
@@ -88,8 +91,8 @@ namespace ShiftsLoggerApiClient
                 viewShifts.AddRow(
                     Convert.ToString(shift.Id),
                     Convert.ToString(shift.WorkerId),
-                    shift.StartDate.ToString("d-M-yyyy"),
-                    shift.EndDate.ToString("d-M-yyyy"),
+                    shift.StartDate.ToString("H:mm d-M-yyyy"),
+                    shift.EndDate.ToString("H:mm d-M-yyyy"),
                     ($"{shift.Duration.Days} days" +
                     $" {shift.Duration.Hours} hours" +
                     $" {shift.Duration.Minutes} minutes"));
@@ -113,32 +116,43 @@ namespace ShiftsLoggerApiClient
 
             while (keepValidating)
             {
-                var startDateString = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]start date d-M-yyyy[/] or \"t\" for today");
+                var startDateString = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]start date H:m d-M-yyyy[/] or \"t\" for now");
                 if (startDateString == "t")
                 {
-                    startDate = DateTime.Today;
+                    DateTime now = DateTime.Now;
+                    startDate = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, 0);
                     startSuccess = true;
                 }
                 else
                 {
-                    startSuccess = DateTime.TryParseExact(startDateString, "d-M-yyyy", culture, DateTimeStyles.None, out startDate);
+                    startSuccess = DateTime.TryParseExact(startDateString, dateFormats, culture, DateTimeStyles.None, out startDate);
                 }
                 while (!startSuccess)
                 {
-                    startDateString = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]start date d-M-yyyy[/] or [LightGoldenrod2_2]\"t\"[/] for today");
-                    startSuccess = DateTime.TryParseExact(startDateString, "d-M-yyyy", culture, DateTimeStyles.None, out startDate);
+                    Console.Clear();
+                    AnsiConsole.MarkupLine("Make sure to enter the date in this order - [LightGoldenrod2_2]Hours:Minutes Day-Month-Year[/]");
+                    startDateString = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]start date H:m d-M-yyyy[/] or [LightGoldenrod2_2]\"t\"[/] for now");
+                    startSuccess = DateTime.TryParseExact(startDateString, dateFormats, culture, DateTimeStyles.None, out startDate);
+                    if (startDateString == "t")
+                    {
+                        DateTime now = DateTime.Now;
+                        startDate = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, 0);
+                        startSuccess = true;
+                    }
                 }
 
-                var endDateString = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]end date d-M-yyyy[/]");
-                bool endSuccess = DateTime.TryParseExact(endDateString, "d-M-yyyy", culture, DateTimeStyles.None, out endDate);
+                var endDateString = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]end date Hour:Minute Day-Month-Year[/] or use only [LightGoldenrod2_2]Hour:Minute[/] if ends same day");
+                bool endSuccess = DateTime.TryParseExact(endDateString, dateFormats, culture, DateTimeStyles.None, out endDate);
                 while (!endSuccess)
                 {
-                    endDateString = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]end date d-M-yyyy[/]");
-                    endSuccess = DateTime.TryParseExact(endDateString, "d-M-yyyy", culture, DateTimeStyles.None, out endDate);
+                    AnsiConsole.MarkupLine("Make sure to enter the date in this order - [LightGoldenrod2_2]Hours:Minutes Day-Month-Year[/]");
+                    endDateString = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]end date Hour:Minute Day-Month-Year[/] or use only [LightGoldenrod2_2]Hour:Minute[/] if ends same day");
+                    endSuccess = DateTime.TryParseExact(endDateString, dateFormats, culture, DateTimeStyles.None, out endDate);
                 }
                 if (endDate <= startDate)
                 {
                     keepValidating = true;
+                    AnsiConsole.MarkupLine("End date must be [LightGoldenrod2_2]later[/] than start date");
                 }
                 else
                 {
@@ -152,7 +166,7 @@ namespace ShiftsLoggerApiClient
             var result = await apiConnection.CreateShift(newShift);
             if (result.Success == false && result.Status == null)
             {
-                AnsiConsole.MarkupLine("[red]Error: API doesn't respond:[/");
+                AnsiConsole.MarkupLine("[red]Error: API doesn't respond:[/]");
                 return;
             }
             if (result.Success == false && result.Status != null)
@@ -193,13 +207,16 @@ namespace ShiftsLoggerApiClient
             menu.Converter = shift =>
             $"{shift.Id,-5} Id | " +
             $"{shift.WorkerId,-5} WorkerId | " +
-            $"{shift.StartDate,-5:dd-MM-yyyy}-Start | " +
-            $"{shift.EndDate,-5:dd-MM-yyyy}-End | " +
-            $"{shift.Duration.Days,-5} Days | ";
+            $"{shift.StartDate,-5:HH:mm dd-MM-yyyy}-Start | " +
+            $"{shift.EndDate,-5:HH:mm dd-MM-yyyy}-End | " +
+            $"{shift.Duration.Days,-5} Days | " +
+            $"{shift.Duration.Hours,-5} Hours | " +
+            $"{shift.Duration.Minutes,-5} Minutes |";
             var selectedShift = AnsiConsole.Prompt(menu);
 
             DateTime startDate = default;
             DateTime endDate = default;
+
             int newWorkerId = AnsiConsole.Ask<int>("Please type new [LightGoldenrod2_2]worker id[/]");
             while (newWorkerId < 1)
             {
@@ -209,32 +226,42 @@ namespace ShiftsLoggerApiClient
             bool newStartDate = false;
             while (keepValidating)
             {
-                string newStartDateString = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]start date d-m-yyyy[/] or \"t\" for today");
+                string newStartDateString = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]start date H:m d-M-yyyy[/] or \"t\" for now");
                 if (newStartDateString == "t")
                 {
-                    startDate = DateTime.Today;
+                    DateTime now = DateTime.Now;
+                    startDate = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, 0);
                     newStartDate = true;
                 }
                 else
                 {
-                    newStartDate = DateTime.TryParseExact(newStartDateString, "d-M-yyyy", culture, DateTimeStyles.None, out startDate);
+                    newStartDate = DateTime.TryParseExact(newStartDateString, dateFormats, culture, DateTimeStyles.None, out startDate);
                 }
                 while (!newStartDate)
                 {
-                    newStartDateString = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]start date d-m-yyyy[/] or \"t\" for today");
-                    newStartDate = DateTime.TryParseExact(newStartDateString, "d-M-yyyy", culture, DateTimeStyles.None, out startDate);
+                    AnsiConsole.MarkupLine("Make sure to enter the date in this order - [LightGoldenrod2_2]Hours:Minutes Day-Month-Year[/]");
+                    newStartDateString = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]start date H:m d-M-yyyy[/] or \"t\" for now");
+                    newStartDate = DateTime.TryParseExact(newStartDateString, dateFormats, culture, DateTimeStyles.None, out startDate);
+                    if (newStartDateString == "t")
+                    {
+                        DateTime now = DateTime.Now;
+                        startDate = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, 0);
+                        newStartDate = true;
+                    }
                 }
 
-                string newEndDatestring = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]end date[/] d-m-yyyy");
-                bool newEndDate = DateTime.TryParseExact(newEndDatestring, "d-M-yyyy", culture, DateTimeStyles.None, out endDate);
+                string newEndDatestring = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]end date H:m d-M-yyyy[/] or use only [LightGoldenrod2_2]Hour:Minute[/] if ends same day");
+                bool newEndDate = DateTime.TryParseExact(newEndDatestring, dateFormats, culture, DateTimeStyles.None, out endDate);
                 while (!newEndDate)
                 {
-                    newEndDatestring = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]end date[/] d-m-yyyy");
-                    newEndDate = DateTime.TryParseExact(newEndDatestring, "d-M-yyyy", culture, DateTimeStyles.None, out endDate);
+                    AnsiConsole.MarkupLine("Make sure to enter the date in this order - [LightGoldenrod2_2]Hours:Minutes Day-Month-Year[/]");
+                    newEndDatestring = AnsiConsole.Ask<string>("Please type new [LightGoldenrod2_2]end date Hour:Minute Day-Month-Year[/] or use only[LightGoldenrod2_2] Hour:Minute[/] if ends same day");
+                    newEndDate = DateTime.TryParseExact(newEndDatestring, dateFormats, culture, DateTimeStyles.None, out endDate);
                 }
                 if (endDate <= startDate)
                 {
                     keepValidating = true;
+                    AnsiConsole.MarkupLine("End date must be [LightGoldenrod2_2]later[/] than start date");
                 }
                 else
                 {
@@ -248,7 +275,7 @@ namespace ShiftsLoggerApiClient
             var result = await apiConnection.UpdateShift(selectedShift.Id, newShift);
             if (result.Success == false && result.Status == null)
             {
-                AnsiConsole.MarkupLine("[red]Error: API doesn't respond:[/");
+                AnsiConsole.MarkupLine("[red]Error: API doesn't respond:[/]");
                 return;
             }
             if (result.Success == false && result.Status != null)
@@ -288,8 +315,8 @@ namespace ShiftsLoggerApiClient
             menu.Converter = shift =>
                 $"{shift.Id,-5} Id | " +
                 $"{shift.WorkerId,-5} WorkerId | " +
-                $"{shift.StartDate,-5:dd-MM-yyyy}-Start | " +
-                $"{shift.EndDate,-5:dd-MM-yyyy}-End | " +
+                $"{shift.StartDate,-5:HH:mm dd-MM-yyyy}-Start | " +
+                $"{shift.EndDate,-5:HH:mm dd-MM-yyyy}-End | " +
                 $"{shift.Duration.Days,-5} Days | ";
             var selectedShift = AnsiConsole.Prompt(menu);
             int id = selectedShift.Id;
@@ -297,7 +324,7 @@ namespace ShiftsLoggerApiClient
             var result = await apiConnection.DeleteShift(id);
             if (result.Success == false && result.Status == null)
             {
-                AnsiConsole.MarkupLine("[red]Error: API doesn't respond:[/");
+                AnsiConsole.MarkupLine("[red]Error: API doesn't respond:[/]");
                 return;
             }
             if (result.Success == false && result.Status != null)

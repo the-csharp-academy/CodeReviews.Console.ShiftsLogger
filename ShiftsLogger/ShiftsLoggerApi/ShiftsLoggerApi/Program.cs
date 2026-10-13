@@ -14,6 +14,16 @@ builder.Services.AddScoped<ShiftService>();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ShiftContext>();
+    if (!context.Database.CanConnect())
+    {
+        Console.WriteLine("Couldn't connect to database - check if your database is working");
+        return;
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
