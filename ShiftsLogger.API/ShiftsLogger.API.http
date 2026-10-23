@@ -1,0 +1,69 @@
+@ShiftsLogger.API_HostAddress = http://localhost:5048
+
+### Get all shifts
+GET {{ShiftsLogger.API_HostAddress}}/api/shifts
+Accept: application/json
+
+### Get a shift
+GET {{ShiftsLogger.API_HostAddress}}/api/shifts/1
+Accept: application/json
+
+### Create a shift
+POST {{ShiftsLogger.API_HostAddress}}/api/shifts
+Content-Type: application/json
+
+{
+  "employeeID": 1,
+  "startTime": "2026-10-08T09:00:00",
+  "endTime": "2026-10-08T17:00:00"
+}
+
+### Update a shift
+PUT {{ShiftsLogger.API_HostAddress}}/api/shifts/1
+Content-Type: application/json
+
+{
+  "employeeID": 1,
+  "startTime": "2026-10-08T08:00:00",
+  "endTime": "2026-10-08T16:00:00"
+}
+
+### Delete a shift
+DELETE {{ShiftsLogger.API_HostAddress}}/api/shifts/1
+
+### Get all employees
+GET {{ShiftsLogger.API_HostAddress}}/api/employees
+Accept: application/json
+
+### Get an employee
+GET {{ShiftsLogger.API_HostAddress}}/api/employees/1
+Accept: application/json
+
+### Create an employee
+POST {{ShiftsLogger.API_HostAddress}}/api/employees
+Content-Type: application/json
+
+{
+  "firstName": "Taylor",
+  "lastName": "Morgan",
+  "role": "Barista"
+}
+
+### Update an employee
+PUT {{ShiftsLogger.API_HostAddress}}/api/employees/1
+Content-Type: application/json
+
+{
+  "firstName": "Taylor",
+  "lastName": "Morgan",
+  "role": "Shift Lead"
+}
+
+### Archive an employee
+PATCH {{ShiftsLogger.API_HostAddress}}/api/employees/1/archive
+
+### Restore an employee
+PATCH {{ShiftsLogger.API_HostAddress}}/api/employees/1/restore
+
+### Delete an employee
+DELETE {{ShiftsLogger.API_HostAddress}}/api/employees/1

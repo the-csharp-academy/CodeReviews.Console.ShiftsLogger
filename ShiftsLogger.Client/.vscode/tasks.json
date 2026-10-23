@@ -1,0 +1,41 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "../../../AppData/Roaming/Code/User/workspaceStorage/a12f4e15186ebfc01da9c043984ab9f8/ms-dotnettools.csdevkit/ShiftsLogger.Client.sln",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "../../../AppData/Roaming/Code/User/workspaceStorage/a12f4e15186ebfc01da9c043984ab9f8/ms-dotnettools.csdevkit/ShiftsLogger.Client.sln",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "../../../AppData/Roaming/Code/User/workspaceStorage/a12f4e15186ebfc01da9c043984ab9f8/ms-dotnettools.csdevkit/ShiftsLogger.Client.sln"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
